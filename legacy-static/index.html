@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vital Aminos — High-Purity Research Peptides</title>
+<meta name="description" content="High-purity research peptides for laboratory use only. COA included. For research use only — not for human or veterinary use." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ===== Access Gate ===== -->
+  <div id="gate" class="gate" aria-modal="true" role="dialog" aria-labelledby="gate-title" hidden>
+    <div class="gate__panel">
+      <p class="gate__eyebrow">Research access</p>
+      <h1 id="gate-title" class="gate__title">Qualified research customers only</h1>
+      <p class="gate__lead">
+        This site provides research compounds and laboratory materials exclusively for
+        qualified researchers and institutions. Products are sold strictly for lawful
+        in-vitro or laboratory research and are <strong>not for human or veterinary use</strong>.
+      </p>
+
+      <form id="gate-form" class="gate__form" novalidate>
+        <label class="field">
+          <span class="field__label">Your research role</span>
+          <select id="gate-role" name="role" required>
+            <option value="" disabled selected>Select a role…</option>
+            <option>Principal Investigator</option>
+            <option>Research Scientist</option>
+            <option>Postdoctoral Researcher</option>
+            <option>Laboratory Director</option>
+            <option>Research Associate</option>
+            <option>Graduate Researcher</option>
+            <option>Clinical Researcher</option>
+            <option>Biochemist</option>
+            <option>Pharmacologist</option>
+            <option>Toxicologist</option>
+            <option>Academic / Faculty</option>
+            <option>Independent Researcher</option>
+            <option>Other</option>
+          </select>
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="gate-affirm" name="affirm" required />
+          <span>
+            I am at least <strong>21 years of age</strong>. I affirm that I am an independent
+            researcher or represent a qualified laboratory, clinic, educational institution, or
+            other research organization. I understand these products are for lawful in-vitro or
+            laboratory research only, must be handled only by experienced professionals, and are
+            <strong>not for human or veterinary use</strong>.
+          </span>
+        </label>
+
+        <label class="check check--inline">
+          <input type="checkbox" id="gate-remember" name="remember" />
+          <span>Remember me for 5 days</span>
+        </label>
+
+        <p id="gate-error" class="gate__error" role="alert" hidden>
+          Please select a role and confirm the statement above to continue.
+        </p>
+
+        <div class="gate__actions">
+          <button type="submit" class="btn btn--primary">Enter Vital Aminos</button>
+          <a class="btn btn--ghost" href="https://www.google.com">Decline &amp; exit</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== Site ===== -->
+  <div id="site" class="site" hidden>
+
+    <div class="promobar">
+      <span>Free shipping on orders $150+</span>
+      <span class="promobar__dot" aria-hidden="true">•</span>
+      <span>Use code <strong>VA15</strong> for 15% off</span>
+    </div>
+
+    <header class="header">
+      <a href="#" class="brand">Vital&nbsp;<span>Aminos</span></a>
+      <nav class="nav">
+        <a href="#shop">Shop</a>
+        <a href="#coa">COA</a>
+        <a href="#about">About Us</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="header__icons" aria-hidden="true">
+        <span class="icon">⌕</span>
+        <span class="icon">☰</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero__copy">
+          <p class="eyebrow">For Research Use Only</p>
+          <h1>High-Purity Research Peptides</h1>
+          <p class="hero__sub">
+            Purity-focused standards. COA included with every batch. Discreet fulfillment
+            for qualified laboratories and independent researchers.
+          </p>
+          <div class="hero__cta">
+            <a href="#shop" class="btn btn--primary">Shop research peptides</a>
+            <a href="#coa" class="btn btn--ghost">View COA library</a>
+          </div>
+          <ul class="hero__badges">
+            <li>Purity-Focused Standards</li>
+            <li>COA Included</li>
+            <li>For Research Use Only</li>
+          </ul>
+        </div>
+        <div class="hero__art" aria-hidden="true">
+          <div class="vial"></div>
+          <div class="vial vial--2"></div>
+          <div class="vial vial--3"></div>
+        </div>
+      </section>
+
+      <section id="shop" class="section">
+        <div class="section__head">
+          <h2>Featured research compounds</h2>
+          <p>Every listing ships with a batch-specific Certificate of Analysis.</p>
+        </div>
+        <div class="grid" id="product-grid"></div>
+      </section>
+
+      <section id="coa" class="section quality">
+        <div class="section__head">
+          <h2>Built for research accountability</h2>
+        </div>
+        <div class="quality__cards">
+          <article>
+            <h3>COA Documentation</h3>
+            <p>Third-party mass spec and HPLC results published per batch and linked on every product page.</p>
+          </article>
+          <article>
+            <h3>Clear Strengths &amp; Formats</h3>
+            <p>Exact mg strengths, vial counts, and reconstitution notes — no ambiguous labeling.</p>
+          </article>
+          <article>
+            <h3>Discreet Fulfillment</h3>
+            <p>Plain, temperature-conscious packaging with tracking on every order.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="about" class="section about">
+        <div class="section__head">
+          <h2>About Vital Aminos</h2>
+        </div>
+        <p>
+          Vital Aminos supplies research-grade peptides to principal investigators,
+          academic faculty, and independent researchers. We do not provide dosing guidance,
+          medical advice, or support for any use in humans or animals. All materials are
+          intended for controlled laboratory environments and handling by trained professionals.
+        </p>
+      </section>
+    </main>
+
+    <footer id="contact" class="footer">
+      <div class="footer__cols">
+        <div>
+          <h4>Shop</h4>
+          <a href="#shop">All peptides</a>
+          <a href="#shop">Blends</a>
+          <a href="#coa">COA library</a>
+        </div>
+        <div>
+          <h4>Support</h4>
+          <a href="#contact">Contact</a>
+          <a href="#coa">Batch lookup</a>
+          <a href="#about">Shipping &amp; storage</a>
+        </div>
+        <div>
+          <h4>Policies</h4>
+          <a href="#">Research use policy</a>
+          <a href="#">Terms of sale</a>
+          <a href="#">Privacy</a>
+        </div>
+      </div>
+      <p class="footer__disclaimer">
+        Products offered by Vital Aminos are sold strictly for research, laboratory, or
+        analytical purposes only. They are not intended for human consumption, animal
+        consumption, medical use, diagnostic use, therapeutic use, or any use that violates
+        applicable laws or regulations.
+      </p>
+      <p class="footer__copy">© <span id="year"></span> Vital Aminos. For Research Use Only.</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
