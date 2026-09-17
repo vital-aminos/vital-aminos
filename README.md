@@ -18,15 +18,15 @@ kept only as a design reference, not part of the app.
 
 ## One-time setup
 
-### 1. Neon database
+### 1. Neon database (DONE ALREADY)
 1. Create a project at [neon.tech](https://neon.tech).
 2. Copy the **pooled** connection string into `DATABASE_URL`, and the **direct**
    (non-pooled) connection string into `DIRECT_URL`, in `.env`.
 
-### 2. Google OAuth
+### 2. Google OAuth (MOSTLY DONE ALREADY) 
 1. In [Google Cloud Console](https://console.cloud.google.com/apis/credentials),
    create an OAuth 2.0 Client ID (Web application).
-2. Authorized redirect URI: `http://localhost:3000/api/auth/callback/google`
+2. Authorized redirect URI: `http://localhost:3000/api/auth/callback/google` ( (((((((((((((((((((((((((MAKE SURE TO ADD ACTUAL DOMAIN AT SOME POINT)
    (add the production equivalent, e.g. `https://yourdomain.com/api/auth/callback/google`,
    once deployed).
 3. Put the client ID/secret into `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` in `.env`.
