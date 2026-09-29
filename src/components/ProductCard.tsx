@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { formatCents } from "@/lib/money";
+import Price from "@/components/Price";
 import AddToCartButton from "@/components/AddToCartButton";
 
 export type ProductCardItem = {
@@ -14,9 +14,11 @@ export type ProductCardItem = {
 export default function ProductCard({
   item,
   isSignedIn,
+  discountPercent = 0,
 }: {
   item: ProductCardItem;
   isSignedIn: boolean;
+  discountPercent?: number;
 }) {
   const initials = item.name.split(" ")[0];
 
@@ -40,7 +42,7 @@ export default function ProductCard({
         <Link href={`/item/${item.slug}`} className="font-semibold text-[1rem] hover:text-accent transition-colors">
           {item.name}
         </Link>
-        <span className="text-accent text-[0.95rem] font-semibold">{formatCents(item.priceCents)}</span>
+        <Price cents={item.priceCents} percent={discountPercent} className="text-accent text-[0.95rem] font-semibold" />
         {item.note && <span className="text-muted text-[0.8rem] mb-3.5">{item.note} • COA included</span>}
         <AddToCartButton itemId={item.id} isSignedIn={isSignedIn} />
       </div>

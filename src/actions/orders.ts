@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/admin";
+import { applyDiscount, getDiscount } from "@/lib/settings";
 
 export type CartLine = { itemId: string; quantity: number };
 
@@ -9,6 +10,7 @@ export type CartLine = { itemId: string; quantity: number };
 export async function getCartDetails(lines: CartLine[]) {
   if (lines.length === 0) return { lines: [], totalCents: 0 };
 
+  const discount = await getDiscount();
   const ids = lines.map((l) => l.itemId);
   const items = await prisma.item.findMany({ where: { id: { in: ids } } });
   const byId = new Map(items.map((i) => [i.id, i]));
@@ -23,9 +25,11 @@ export async function getCartDetails(lines: CartLine[]) {
         slug: item.slug,
         name: item.name,
         imageUrl: item.imageUrl,
-        priceCents: item.priceCents,
+        originalPriceCents: item.priceCents,
+        priceCents: applyDiscount(item.priceCents, discount.percent),
+        discountPercent: discount.percent,
         quantity,
-        lineTotalCents: item.priceCents * quantity,
+        lineTotalCents: applyDiscount(item.priceCents, discount.percent) * quantity,
       };
     })
     .filter((l): l is NonNullable<typeof l> => l !== null);

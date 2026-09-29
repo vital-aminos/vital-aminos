@@ -110,7 +110,12 @@ export default function CartPage() {
                   <Link href={`/item/${line.slug}`} className="font-semibold hover:text-accent transition-colors">
                     {line.name}
                   </Link>
-                  <p className="text-muted text-[0.85rem]">{formatCents(line.priceCents)} each</p>
+                  <p className="text-muted text-[0.85rem]">
+                    {line.discountPercent > 0 && (
+                      <s className="mr-2 opacity-80">{formatCents(line.originalPriceCents)}</s>
+                    )}
+                    {formatCents(line.priceCents)} each
+                  </p>
                 </div>
                 <input
                   type="number"

@@ -1,25 +1,40 @@
 import Link from "next/link";
 import { auth, signOut } from "@/auth";
 import CartBadge from "@/components/CartBadge";
+import { getDiscount } from "@/lib/settings";
 
 export default async function Header() {
-  const session = await auth();
+  const [session, discount] = await Promise.all([auth(), getDiscount()]);
 
   return (
     <>
       <div className="bg-gradient-to-r from-accent-soft to-[rgba(129,140,248,0.1)] border-b border-line text-text text-[0.78rem] tracking-[0.01em] flex gap-3 justify-center items-center py-2.5 px-4">
         <span>Free shipping on orders $150+</span>
-        <span className="opacity-40">•</span>
-        <span>
-          Use code <strong className="text-accent">VA15</strong> for 15% off
-        </span>
+        {discount.enabled && (
+          <>
+            <span className="opacity-40">•</span>
+            <span>
+              <strong className="text-accent">{discount.percent}% off</strong> sitewide — prices
+              already reduced
+            </span>
+          </>
+        )}
       </div>
 
       <header className="flex items-center justify-between gap-6 py-[18px] px-[clamp(16px,5vw,56px)] border-b border-line sticky top-0 bg-[rgba(9,11,16,0.72)] backdrop-blur-xl z-40">
-        <Link href="/" className="font-serif font-semibold text-[1.22rem]">
-          Vital{" "}
-          <span className="bg-gradient-to-br from-accent to-accent-2 bg-clip-text text-transparent">
-            Aminos
+        <Link href="/" className="flex items-center gap-3 font-serif font-semibold text-[1.22rem]">
+          {/* LOGO PLACEHOLDER — swap this box for <Image src="/logo.svg" width={40} height={40} alt="Vital Aminos" /> */}
+          <span
+            aria-label="Logo placeholder"
+            className="grid place-items-center w-10 h-10 rounded-xl border border-dashed border-line-strong text-[0.55rem] font-sans font-bold tracking-widest text-muted"
+          >
+            LOGO
+          </span>
+          <span>
+            Vital{" "}
+            <span className="bg-gradient-to-br from-accent to-accent-2 bg-clip-text text-transparent">
+              Aminos
+            </span>
           </span>
         </Link>
 
@@ -27,6 +42,7 @@ export default async function Header() {
           <Link href="/#shop" className="hover:text-text transition-colors">Shop</Link>
           <Link href="/#coa" className="hover:text-text transition-colors">COA</Link>
           <Link href="/#about" className="hover:text-text transition-colors">About Us</Link>
+          <Link href="/contact" className="hover:text-text transition-colors">Contact</Link>
           {session?.user && (
             <Link href="/orders" className="hover:text-text transition-colors">My orders</Link>
           )}

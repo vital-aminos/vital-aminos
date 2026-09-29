@@ -17,6 +17,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <nav className="flex gap-5 text-[0.88rem] text-muted">
           <Link href="/admin" className="hover:text-text transition-colors">Items</Link>
           <Link href="/admin/items/new" className="hover:text-text transition-colors">Add item</Link>
+          <Link href="/admin/discount" className="hover:text-text transition-colors">Discount</Link>
+          <Link href="/admin/messages" className="hover:text-text transition-colors">Messages</Link>
         </nav>
         <Link href="/" className="ml-auto text-[0.85rem] text-muted hover:text-accent transition-colors">
           ← Back to site

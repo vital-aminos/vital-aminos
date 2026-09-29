@@ -1,15 +1,23 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/ProductCard";
+import { getDiscount } from "@/lib/settings";
 
 // Product listing and cart/session state are always live — never prerender at build time.
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [session, items] = await Promise.all([
+  const [session, items, discount] = await Promise.all([
     auth(),
     prisma.item.findMany({ where: { active: true }, orderBy: { createdAt: "desc" } }),
+    getDiscount(),
   ]);
+
+  // Guests only get a glimpse (first few products); the rest requires sign-in.
+  const isSignedIn = !!session?.user;
+  const GLIMPSE = 3;
+  const visibleItems = isSignedIn ? items : items.slice(0, GLIMPSE);
+  const lockedCount = items.length - visibleItems.length;
 
   return (
     <>
@@ -88,12 +96,39 @@ export default async function HomePage() {
           </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {items.map((item) => (
-              <ProductCard key={item.id} item={item} isSignedIn={!!session?.user} />
+            {visibleItems.map((item) => (
+              <ProductCard key={item.id} item={item} isSignedIn={isSignedIn} discountPercent={discount.percent} />
             ))}
           </div>
         )}
+        {!isSignedIn && (
+          <div className="relative mt-6 rounded-2xl overflow-hidden border border-line">
+            <div aria-hidden="true" className="grid grid-cols-1 sm:grid-cols-3 gap-6 p-6 blur-md select-none pointer-events-none opacity-60">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="h-56 rounded-2xl bg-gradient-to-b from-panel-2 to-panel border border-line" />
+              ))}
+            </div>
+            <div className="absolute inset-0 grid place-items-center p-6 bg-bg/60">
+              <div className="text-center max-w-[420px]">
+                <h3 className="text-[1.3rem] mb-2">Sign in to see the full catalog</h3>
+                <p className="text-muted text-[0.9rem] mb-5">
+                  {lockedCount > 0 ? `${lockedCount} more research compound${lockedCount === 1 ? "" : "s"}, ` : "Full "}
+                  COA library, and pricing details are available to signed-in researchers.
+                </p>
+                <a
+                  href="/sign-in"
+                  className="inline-flex items-center justify-center px-6 py-3 rounded-full font-semibold text-[0.94rem] bg-gradient-to-br from-accent to-accent-2 text-accent-ink"
+                >
+                  Sign in to continue
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
+
+      {isSignedIn && (
+        <>
 
       <section id="coa" className="max-w-[1140px] mx-auto px-[clamp(16px,5vw,56px)] py-16 md:py-24 border-b border-line">
         <div className="max-w-[60ch] mb-11">
@@ -136,6 +171,8 @@ export default async function HomePage() {
           intended for controlled laboratory environments and handling by trained professionals.
         </p>
       </section>
+        </>
+      )}
     </>
   );
 }

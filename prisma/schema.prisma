@@ -105,3 +105,20 @@ model OrderItem {
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
   item  Item  @relation(fields: [itemId], references: [id])
 }
+
+// Singleton row (id = "main") holding site-wide settings editable from /admin.
+model SiteSettings {
+  id              String   @id @default("main")
+  discountEnabled Boolean  @default(false)
+  discountPercent Int      @default(10)
+  updatedAt       DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String   @db.Text
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

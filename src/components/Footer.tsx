@@ -11,7 +11,7 @@ export default function Footer() {
         </div>
         <div>
           <h4 className="font-sans text-[0.76rem] uppercase tracking-[0.14em] text-muted mb-3.5">Support</h4>
-          <Link href="/#contact" className="block text-[0.9rem] py-1.5 hover:text-accent transition-colors">Contact</Link>
+          <Link href="/contact" className="block text-[0.9rem] py-1.5 hover:text-accent transition-colors">Contact</Link>
           <Link href="/orders" className="block text-[0.9rem] py-1.5 hover:text-accent transition-colors">Order history</Link>
         </div>
         <div>

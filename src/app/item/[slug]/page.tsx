@@ -1,7 +1,8 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { formatCents } from "@/lib/money";
+import Price from "@/components/Price";
+import { getDiscount } from "@/lib/settings";
 import AddToCartButton from "@/components/AddToCartButton";
 
 export const dynamic = "force-dynamic";
@@ -12,10 +13,14 @@ export default async function ItemPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [session, item] = await Promise.all([
+  const [session, item, discount] = await Promise.all([
     auth(),
     prisma.item.findUnique({ where: { slug } }),
+    getDiscount(),
   ]);
+
+  // Full product details are for signed-in visitors only.
+  if (!session?.user) redirect(`/sign-in?callbackUrl=${encodeURIComponent(`/item/${slug}`)}`);
 
   if (!item || (!item.active && !session?.user?.isAdmin)) notFound();
 
@@ -42,7 +47,9 @@ export default async function ItemPage({
 
         <div>
           <h1 className="text-[2rem] mb-3">{item.name}</h1>
-          <p className="text-accent text-[1.3rem] font-semibold mb-5">{formatCents(item.priceCents)}</p>
+          <p className="mb-5">
+            <Price cents={item.priceCents} percent={discount.percent} className="text-accent text-[1.3rem] font-semibold" />
+          </p>
           {item.note && <p className="text-muted text-[0.9rem] mb-6">{item.note} • COA included</p>}
           <p className="text-muted leading-relaxed whitespace-pre-line mb-8">{item.description}</p>
 
