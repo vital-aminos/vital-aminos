@@ -27,8 +27,10 @@
   --radius: 16px;
   --radius-lg: 24px;
 
-  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  /* Plus Jakarta Sans everywhere — --font-serif is kept as an alias so existing
+     heading/`font-serif` usages pick it up without touching each component. */
+  --font-sans: var(--font-jakarta), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-serif: var(--font-jakarta), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 @theme inline {
