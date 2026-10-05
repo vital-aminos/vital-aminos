@@ -40,7 +40,7 @@ export default async function ItemPage({
             className="w-full rounded-2xl border border-line object-cover aspect-[4/3]"
           />
         ) : (
-          <div className="aspect-[4/3] grid place-items-center text-accent font-serif text-3xl rounded-2xl border border-line bg-gradient-to-br from-[#1c2130] to-[#0f121b]">
+          <div className="aspect-[4/3] grid place-items-center text-accent font-serif text-3xl rounded-2xl border border-line bg-gradient-to-br from-[#eaf2ff] to-[#d4e3ff]">
             {item.name.split(" ")[0]}
           </div>
         )}

@@ -32,7 +32,7 @@ export default function AddToCartButton({
       onClick={handleClick}
       className={
         className ??
-        "mt-auto w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-[0.94rem] border border-line-strong bg-white/[0.02] backdrop-blur-sm hover:border-accent hover:text-accent hover:bg-accent-soft transition-colors"
+        "mt-auto w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-[0.94rem] border border-line-strong bg-white backdrop-blur-sm hover:border-accent hover:text-accent hover:bg-accent-soft transition-colors"
       }
     >
       {added ? "Added ✓" : "Add to cart"}

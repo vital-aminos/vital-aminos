@@ -50,7 +50,7 @@ export default function MobileMenu({
             type="button"
             aria-label="Close menu"
             onClick={() => setOpen(false)}
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-default"
+            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm cursor-default"
           />
           <aside
             id="site-menu"

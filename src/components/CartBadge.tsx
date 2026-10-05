@@ -16,7 +16,7 @@ export default function CartBadge() {
   return (
     <Link
       href="/cart"
-      className="relative flex items-center justify-center rounded-full border border-line-strong bg-white/[0.02] w-9 h-9 text-text/90 hover:border-accent hover:text-accent transition-colors"
+      className="relative flex items-center justify-center rounded-full border border-line-strong bg-white w-9 h-9 text-text/90 hover:border-accent hover:text-accent transition-colors"
       aria-label={`Cart, ${count} item${count === 1 ? "" : "s"}`}
     >
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">

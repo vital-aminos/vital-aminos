@@ -10,11 +10,9 @@ export default function Footer() {
       <div className="px-[clamp(16px,5vw,56px)] pt-[72px] pb-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-10 mb-11">
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="font-serif font-semibold text-[1.22rem]">
-              Vital{" "}
-              <span className="bg-gradient-to-br from-accent to-accent-2 bg-clip-text text-transparent">
-                Aminos
-              </span>
+            <Link href="/" className="uppercase tracking-[0.08em] text-[1.15rem]">
+              <span className="font-extrabold">Vital</span>{" "}
+              <span className="font-normal text-accent">Aminos</span>
             </Link>
             <p className="text-muted text-[0.85rem] mt-3 max-w-[32ch]">
               High-purity research peptides with batch-specific COAs. For research use only.

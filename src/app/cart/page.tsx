@@ -102,7 +102,7 @@ export default function CartPage() {
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={line.imageUrl} alt={line.name} className="w-16 h-16 rounded-lg object-cover border border-line" />
                 ) : (
-                  <div className="w-16 h-16 rounded-lg grid place-items-center text-accent font-serif bg-gradient-to-br from-[#1c2130] to-[#0f121b] border border-line">
+                  <div className="w-16 h-16 rounded-lg grid place-items-center text-accent font-serif bg-gradient-to-br from-[#eaf2ff] to-[#d4e3ff] border border-line">
                     {line.name.split(" ")[0]}
                   </div>
                 )}

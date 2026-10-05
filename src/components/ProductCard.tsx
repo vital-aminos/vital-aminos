@@ -23,7 +23,7 @@ export default function ProductCard({
   const initials = item.name.split(" ")[0];
 
   return (
-    <article className="bg-gradient-to-b from-panel-2 to-panel border border-line rounded-2xl overflow-hidden flex flex-col shadow-[0_1px_2px_rgba(0,0,0,0.3)] transition-all hover:-translate-y-1.5 hover:border-accent hover:shadow-[0_12px_32px_-12px_rgba(0,0,0,0.55),0_0_0_1px_var(--accent-soft)]">
+    <article className="bg-gradient-to-b from-panel-2 to-panel border border-line rounded-2xl overflow-hidden flex flex-col shadow-[0_1px_2px_rgba(15,40,100,0.08)] transition-all hover:-translate-y-1.5 hover:border-accent hover:shadow-[0_12px_32px_-12px_rgba(15,40,100,0.18),0_0_0_1px_var(--accent-soft)]">
       <Link href={`/item/${item.slug}`} className="block">
         {item.imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -33,7 +33,7 @@ export default function ProductCard({
             className="aspect-[4/3] w-full object-cover border-b border-line"
           />
         ) : (
-          <div className="aspect-[4/3] grid place-items-center text-accent font-serif text-2xl border-b border-line bg-gradient-to-br from-[#1c2130] to-[#0f121b]">
+          <div className="aspect-[4/3] grid place-items-center text-accent font-serif text-2xl border-b border-line bg-gradient-to-br from-[#eaf2ff] to-[#d4e3ff]">
             {initials}
           </div>
         )}

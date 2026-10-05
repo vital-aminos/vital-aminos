@@ -81,7 +81,7 @@ export default function AccessGate({ children }: { children: React.ReactNode }) 
       className="fixed inset-0 z-[100] grid place-items-center p-6 overflow-y-auto"
       style={{
         background:
-          "radial-gradient(1000px 700px at 50% -20%, rgba(129,140,248,0.2), transparent 60%), radial-gradient(900px 600px at 50% 120%, rgba(94,234,212,0.14), transparent 60%), #050609",
+          "radial-gradient(1000px 700px at 50% -20%, rgba(59,130,246,0.18), transparent 60%), radial-gradient(900px 600px at 50% 120%, rgba(29,78,216,0.10), transparent 60%), #f4f8ff",
       }}
       role="dialog"
       aria-modal="true"
@@ -165,7 +165,7 @@ export default function AccessGate({ children }: { children: React.ReactNode }) 
             </button>
             <a
               href="https://www.google.com"
-              className="flex-1 min-w-[160px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-[0.94rem] border border-line-strong bg-white/[0.02]"
+              className="flex-1 min-w-[160px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-[0.94rem] border border-line-strong bg-white"
             >
               Decline &amp; exit
             </a>

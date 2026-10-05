@@ -20,7 +20,7 @@ export default async function Header() {
 
   return (
     <>
-      <div className="bg-gradient-to-r from-accent-soft to-[rgba(129,140,248,0.1)] border-b border-line text-text text-[0.78rem] tracking-[0.01em] flex gap-3 justify-center items-center py-2.5 px-4">
+      <div className="bg-gradient-to-r from-accent-soft to-[rgba(59,130,246,0.1)] border-b border-line text-text text-[0.78rem] tracking-[0.01em] flex gap-3 justify-center items-center py-2.5 px-4">
         <span>Free shipping on orders $150+</span>
         {discount.enabled && (
           <>
@@ -33,8 +33,8 @@ export default async function Header() {
         )}
       </div>
 
-      <header className="flex items-center justify-between gap-6 py-[18px] px-[clamp(16px,5vw,56px)] border-b border-line sticky top-0 bg-[rgba(9,11,16,0.72)] backdrop-blur-xl z-40">
-        <Link href="/" className="flex items-center gap-3 font-serif font-semibold text-[1.22rem]">
+      <header className="flex items-center justify-between gap-6 py-[18px] px-[clamp(16px,5vw,56px)] border-b border-line sticky top-0 bg-[rgba(255,255,255,0.8)] backdrop-blur-xl z-40">
+        <Link href="/" className="flex items-center gap-3 uppercase tracking-[0.08em] text-[1.15rem]">
           {/* LOGO PLACEHOLDER — swap this box for <Image src="/logo.svg" width={40} height={40} alt="Vital Aminos" /> */}
           <span
             aria-label="Logo placeholder"
@@ -43,10 +43,8 @@ export default async function Header() {
             LOGO
           </span>
           <span>
-            Vital{" "}
-            <span className="bg-gradient-to-br from-accent to-accent-2 bg-clip-text text-transparent">
-              Aminos
-            </span>
+            <span className="font-extrabold">Vital</span>{" "}
+            <span className="font-normal text-accent">Aminos</span>
           </span>
         </Link>
 

@@ -25,7 +25,7 @@ export default async function HomePage() {
           <p className="inline-block uppercase tracking-[0.22em] text-[0.68rem] text-accent mb-3 font-bold">
             For Research Use Only
           </p>
-          <h1 className="text-[clamp(2.4rem,5.5vw,3.7rem)] mb-5 bg-gradient-to-b from-white to-[#b9c2d4] bg-clip-text text-transparent">
+          <h1 className="text-[clamp(2.4rem,5.5vw,3.7rem)] mb-5 bg-gradient-to-b from-[#0b1b3a] to-[#1d4ed8] bg-clip-text text-transparent">
             High-Purity Research Peptides
           </h1>
           <p className="text-muted text-[1.08rem] max-w-[46ch]">
@@ -41,7 +41,7 @@ export default async function HomePage() {
             </a>
             <a
               href="/coas"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-[0.94rem] border border-line-strong bg-white/[0.02] hover:border-accent hover:text-accent hover:bg-accent-soft transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-[0.94rem] border border-line-strong bg-white hover:border-accent hover:text-accent hover:bg-accent-soft transition-colors"
             >
               View COA library
             </a>
@@ -58,7 +58,7 @@ export default async function HomePage() {
           </ul>
         </div>
         <div className="relative h-[260px] md:h-[360px] flex gap-6 items-end justify-center">
-          <div className="absolute -inset-x-0 -inset-y-[10%] blur-2xl" style={{ background: "radial-gradient(closest-side, rgba(94,234,212,0.18), transparent)" }} />
+          <div className="absolute -inset-x-0 -inset-y-[10%] blur-2xl" style={{ background: "radial-gradient(closest-side, rgba(59,130,246,0.22), transparent)" }} />
           {[0, -2, -4].map((delay, i) => (
             <div
               key={i}
@@ -66,11 +66,11 @@ export default async function HomePage() {
               style={{
                 height: i === 1 ? 278 : i === 2 ? 190 : 220,
                 background:
-                  "linear-gradient(180deg, rgba(94,234,212,0.4), rgba(129,140,248,0.12) 44%, var(--panel) 45%)",
+                  "linear-gradient(180deg, rgba(59,130,246,0.45), rgba(29,78,216,0.12) 44%, var(--panel) 45%)",
                 animation: `float 6s ease-in-out ${delay}s infinite`,
               }}
             >
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-9 h-4 rounded-[5px] bg-[#2b2f3d]" />
+              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-9 h-4 rounded-[5px] bg-[#1e3a8a]" />
             </div>
           ))}
         </div>
