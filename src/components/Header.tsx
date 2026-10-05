@@ -2,9 +2,21 @@ import Link from "next/link";
 import { auth, signOut } from "@/auth";
 import CartBadge from "@/components/CartBadge";
 import { getDiscount } from "@/lib/settings";
+import MobileMenu from "@/components/MobileMenu";
+import SearchBar from "@/components/SearchBar";
 
 export default async function Header() {
   const [session, discount] = await Promise.all([auth(), getDiscount()]);
+
+  const links = [
+    { href: "/", label: "Home" },
+    { href: "/compounds", label: "Compounds", hint: "Browse research peptides" },
+    { href: "/coas", label: "COAs", hint: "Certificates of analysis" },
+    { href: "/about", label: "About Us" },
+    { href: "/contact", label: "Contact" },
+    ...(session?.user ? [{ href: "/orders", label: "My orders" }] : []),
+    ...(session?.user?.isAdmin ? [{ href: "/admin", label: "Admin" }] : []),
+  ];
 
   return (
     <>
@@ -38,20 +50,12 @@ export default async function Header() {
           </span>
         </Link>
 
-        <nav className="hidden md:flex gap-8 text-[0.9rem] text-muted">
-          <Link href="/#shop" className="hover:text-text transition-colors">Shop</Link>
-          <Link href="/#coa" className="hover:text-text transition-colors">COA</Link>
-          <Link href="/#about" className="hover:text-text transition-colors">About Us</Link>
-          <Link href="/contact" className="hover:text-text transition-colors">Contact</Link>
-          {session?.user && (
-            <Link href="/orders" className="hover:text-text transition-colors">My orders</Link>
-          )}
-          {session?.user?.isAdmin && (
-            <Link href="/admin" className="text-accent hover:text-text transition-colors">Admin</Link>
-          )}
-        </nav>
+        <SearchBar className="hidden md:block flex-1 max-w-[380px]" />
 
         <div className="flex items-center gap-3">
+          <Link href="/search" aria-label="Search" className="md:hidden grid place-items-center w-10 h-10 rounded-xl border border-line-strong hover:border-accent">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+          </Link>
           <CartBadge />
           {session?.user ? (
             <form
@@ -86,6 +90,7 @@ export default async function Header() {
               Sign in
             </Link>
           )}
+          <MobileMenu links={links} isSignedIn={!!session?.user} />
         </div>
       </header>
     </>

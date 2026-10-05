@@ -27,6 +27,9 @@ export default async function EditItemPage({
           note: item.note ?? "",
           price: (item.priceCents / 100).toFixed(2),
           imageUrl: item.imageUrl ?? "",
+          batchNumber: item.batchNumber ?? "",
+          purity: item.purity ?? "",
+          coaUrl: item.coaUrl ?? "",
           active: item.active,
         }}
       />

@@ -22,6 +22,9 @@ const itemSchema = z.object({
     return Number.isFinite(cents) && cents >= 0;
   }, "Enter a valid non-negative price"),
   imageUrl: z.string().trim().url().max(500).optional().or(z.literal("")),
+  batchNumber: z.string().trim().max(60).optional().or(z.literal("")),
+  purity: z.string().trim().max(30).optional().or(z.literal("")),
+  coaUrl: z.string().trim().url().max(500).optional().or(z.literal("")),
   active: z.coerce.boolean().optional(),
 });
 
@@ -38,6 +41,9 @@ function parseForm(formData: FormData) {
     note: String(formData.get("note") ?? ""),
     price: String(formData.get("price") ?? ""),
     imageUrl: String(formData.get("imageUrl") ?? ""),
+    batchNumber: String(formData.get("batchNumber") ?? ""),
+    purity: String(formData.get("purity") ?? ""),
+    coaUrl: String(formData.get("coaUrl") ?? ""),
     active: formData.get("active") === "on",
   };
   return itemSchema.safeParse(raw);
@@ -72,11 +78,14 @@ export async function createItem(
       note: data.note || null,
       priceCents: dollarsToCents(data.price),
       imageUrl: data.imageUrl || null,
+      batchNumber: data.batchNumber || null,
+      purity: data.purity || null,
+      coaUrl: data.coaUrl || null,
       active: data.active ?? true,
     },
   });
 
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   revalidatePath("/admin");
   redirect_to_admin();
 }
@@ -112,11 +121,14 @@ export async function updateItem(
       note: data.note || null,
       priceCents: dollarsToCents(data.price),
       imageUrl: data.imageUrl || null,
+      batchNumber: data.batchNumber || null,
+      purity: data.purity || null,
+      coaUrl: data.coaUrl || null,
       active: data.active ?? false,
     },
   });
 
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   revalidatePath("/admin");
   revalidatePath(`/item/${data.slug}`);
   redirect_to_admin();
@@ -125,14 +137,14 @@ export async function updateItem(
 export async function deleteItem(id: string) {
   await requireAdmin();
   await prisma.item.delete({ where: { id } });
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   revalidatePath("/admin");
 }
 
 export async function toggleItemActive(id: string, active: boolean) {
   await requireAdmin();
   await prisma.item.update({ where: { id }, data: { active } });
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   revalidatePath("/admin");
 }
 

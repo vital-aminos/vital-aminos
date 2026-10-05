@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import { getDiscount } from "@/lib/settings";
 
@@ -13,11 +14,9 @@ export default async function HomePage() {
     getDiscount(),
   ]);
 
-  // Guests only get a glimpse (first few products); the rest requires sign-in.
   const isSignedIn = !!session?.user;
-  const GLIMPSE = 3;
-  const visibleItems = isSignedIn ? items : items.slice(0, GLIMPSE);
-  const lockedCount = items.length - visibleItems.length;
+  // Home is a teaser; the full catalog lives on /compounds.
+  const featured = items.slice(0, 3);
 
   return (
     <>
@@ -35,13 +34,13 @@ export default async function HomePage() {
           </p>
           <div className="flex gap-3.5 my-7 flex-wrap">
             <a
-              href="#shop"
+              href="/compounds"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-[0.94rem] bg-gradient-to-br from-accent to-accent-2 text-accent-ink shadow-[0_10px_30px_-10px_var(--accent-glow)] hover:-translate-y-0.5 transition-transform"
             >
               Shop research peptides
             </a>
             <a
-              href="#coa"
+              href="/coas"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-[0.94rem] border border-line-strong bg-white/[0.02] hover:border-accent hover:text-accent hover:bg-accent-soft transition-colors"
             >
               View COA library
@@ -77,102 +76,55 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="shop" className="max-w-[1140px] mx-auto px-[clamp(16px,5vw,56px)] py-16 md:py-24 border-b border-line">
-        <div className="max-w-[60ch] mb-11">
-          <h2 className="text-[clamp(1.6rem,3vw,2.1rem)] mb-2.5">Featured research compounds</h2>
-          <p className="text-muted">Every listing ships with a batch-specific Certificate of Analysis.</p>
+      <section className="max-w-[1140px] mx-auto px-[clamp(16px,5vw,56px)] py-16 md:py-20 border-b border-line">
+        <div className="flex items-end justify-between gap-4 mb-9 flex-wrap">
+          <div className="max-w-[60ch]">
+            <h2 className="text-[clamp(1.6rem,3vw,2.1rem)] mb-2.5">Featured research compounds</h2>
+            <p className="text-muted">Every listing ships with a batch-specific Certificate of Analysis.</p>
+          </div>
+          <Link href="/compounds" className="text-accent hover:underline text-[0.9rem]">
+            View all compounds →
+          </Link>
         </div>
-        {items.length === 0 ? (
+        {featured.length === 0 ? (
           <p className="text-muted">
             No products are listed yet.
             {session?.user?.isAdmin && (
               <>
                 {" "}
-                <a href="/admin/items/new" className="text-accent hover:underline">
+                <Link href="/admin/items/new" className="text-accent hover:underline">
                   Add your first item →
-                </a>
+                </Link>
               </>
             )}
           </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {visibleItems.map((item) => (
+            {featured.map((item) => (
               <ProductCard key={item.id} item={item} isSignedIn={isSignedIn} discountPercent={discount.percent} />
             ))}
           </div>
         )}
-        {!isSignedIn && (
-          <div className="relative mt-6 rounded-2xl overflow-hidden border border-line">
-            <div aria-hidden="true" className="grid grid-cols-1 sm:grid-cols-3 gap-6 p-6 blur-md select-none pointer-events-none opacity-60">
-              {[0, 1, 2].map((i) => (
-                <div key={i} className="h-56 rounded-2xl bg-gradient-to-b from-panel-2 to-panel border border-line" />
-              ))}
-            </div>
-            <div className="absolute inset-0 grid place-items-center p-6 bg-bg/60">
-              <div className="text-center max-w-[420px]">
-                <h3 className="text-[1.3rem] mb-2">Sign in to see the full catalog</h3>
-                <p className="text-muted text-[0.9rem] mb-5">
-                  {lockedCount > 0 ? `${lockedCount} more research compound${lockedCount === 1 ? "" : "s"}, ` : "Full "}
-                  COA library, and pricing details are available to signed-in researchers.
-                </p>
-                <a
-                  href="/sign-in"
-                  className="inline-flex items-center justify-center px-6 py-3 rounded-full font-semibold text-[0.94rem] bg-gradient-to-br from-accent to-accent-2 text-accent-ink"
-                >
-                  Sign in to continue
-                </a>
-              </div>
-            </div>
-          </div>
-        )}
       </section>
 
-      {isSignedIn && (
-        <>
-
-      <section id="coa" className="max-w-[1140px] mx-auto px-[clamp(16px,5vw,56px)] py-16 md:py-24 border-b border-line">
-        <div className="max-w-[60ch] mb-11">
-          <h2 className="text-[clamp(1.6rem,3vw,2.1rem)]">Built for research accountability</h2>
-        </div>
+      <section className="max-w-[1140px] mx-auto px-[clamp(16px,5vw,56px)] py-16 md:py-20">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
-            {
-              title: "COA Documentation",
-              body: "Third-party mass spec and HPLC results published per batch and linked on every product page.",
-            },
-            {
-              title: "Clear Strengths & Formats",
-              body: "Exact mg strengths, vial counts, and reconstitution notes — no ambiguous labeling.",
-            },
-            {
-              title: "Discreet Fulfillment",
-              body: "Plain, temperature-conscious packaging with tracking on every order.",
-            },
+            { href: "/compounds", title: "Compounds", body: "Browse the full catalog of research peptides and blends." },
+            { href: "/coas", title: "COAs", body: "Batch-specific certificates of analysis, mass spec and HPLC." },
+            { href: "/about", title: "About us", body: "Who we supply and our research-use-only policy." },
           ].map((c) => (
-            <article
-              key={c.title}
-              className="bg-gradient-to-b from-panel-2 to-panel border border-line rounded-2xl p-7 hover:-translate-y-1 hover:border-line-strong transition-transform"
+            <Link
+              key={c.href}
+              href={c.href}
+              className="bg-gradient-to-b from-panel-2 to-panel border border-line rounded-2xl p-7 hover:-translate-y-1 hover:border-accent transition-all"
             >
-              <h3 className="text-[1.12rem] mb-2.5 text-accent">{c.title}</h3>
+              <h3 className="text-[1.15rem] mb-2.5 text-accent">{c.title} →</h3>
               <p className="text-muted text-[0.9rem]">{c.body}</p>
-            </article>
+            </Link>
           ))}
         </div>
       </section>
-
-      <section id="about" className="max-w-[1140px] mx-auto px-[clamp(16px,5vw,56px)] py-16 md:py-24">
-        <div className="max-w-[60ch] mb-11">
-          <h2 className="text-[clamp(1.6rem,3vw,2.1rem)]">About Vital Aminos</h2>
-        </div>
-        <p className="text-muted max-w-[70ch] text-[1.02rem]">
-          Vital Aminos supplies research-grade peptides to principal investigators,
-          academic faculty, and independent researchers. We do not provide dosing guidance,
-          medical advice, or support for any use in humans or animals. All materials are
-          intended for controlled laboratory environments and handling by trained professionals.
-        </p>
-      </section>
-        </>
-      )}
     </>
   );
 }

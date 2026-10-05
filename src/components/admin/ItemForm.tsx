@@ -10,6 +10,9 @@ export type ItemFormValues = {
   note: string;
   price: string; // dollars, e.g. "60.00"
   imageUrl: string;
+  batchNumber: string;
+  purity: string;
+  coaUrl: string;
   active: boolean;
 };
 
@@ -99,6 +102,30 @@ export default function ItemForm({
             className="flex-1 bg-bg-2 border border-line-strong rounded-[10px] px-4 py-3"
           />
         </div>
+      </Field>
+
+      <Field label="Batch number" error={fieldError("batchNumber")} hint="Optional — shown on the COAs page">
+        <input
+          name="batchNumber"
+          defaultValue={initial?.batchNumber}
+          className="w-full bg-bg-2 border border-line-strong rounded-[10px] px-4 py-3"
+        />
+      </Field>
+
+      <Field label="Purity" error={fieldError("purity")} hint="Optional — e.g. 99.2%">
+        <input
+          name="purity"
+          defaultValue={initial?.purity}
+          className="w-full bg-bg-2 border border-line-strong rounded-[10px] px-4 py-3"
+        />
+      </Field>
+
+      <Field label="COA link (PDF/image URL)" error={fieldError("coaUrl")} hint="Optional — items without one show “COA on request”">
+        <input
+          name="coaUrl"
+          defaultValue={initial?.coaUrl}
+          className="w-full bg-bg-2 border border-line-strong rounded-[10px] px-4 py-3"
+        />
       </Field>
 
       <label className="flex items-center gap-3 text-[0.9rem]">

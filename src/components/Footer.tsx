@@ -6,8 +6,8 @@ export default function Footer() {
       <div className="flex gap-16 flex-wrap mb-11">
         <div>
           <h4 className="font-sans text-[0.76rem] uppercase tracking-[0.14em] text-muted mb-3.5">Shop</h4>
-          <Link href="/#shop" className="block text-[0.9rem] py-1.5 hover:text-accent transition-colors">All peptides</Link>
-          <Link href="/#coa" className="block text-[0.9rem] py-1.5 hover:text-accent transition-colors">COA library</Link>
+          <Link href="/compounds" className="block text-[0.9rem] py-1.5 hover:text-accent transition-colors">All compounds</Link>
+          <Link href="/coas" className="block text-[0.9rem] py-1.5 hover:text-accent transition-colors">COA library</Link>
         </div>
         <div>
           <h4 className="font-sans text-[0.76rem] uppercase tracking-[0.14em] text-muted mb-3.5">Support</h4>
