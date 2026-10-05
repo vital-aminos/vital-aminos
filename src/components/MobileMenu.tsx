@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import SearchBar from "@/components/SearchBar";
 
@@ -42,7 +43,8 @@ export default function MobileMenu({
         </svg>
       </button>
 
-      {open && (
+      {open &&
+        createPortal(
         <div className="fixed inset-0 z-[60]" role="dialog" aria-modal="true" aria-label="Site navigation">
           <button
             type="button"
@@ -94,7 +96,8 @@ export default function MobileMenu({
               </Link>
             )}
           </aside>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
