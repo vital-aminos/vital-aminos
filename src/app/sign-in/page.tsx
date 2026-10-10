@@ -1,4 +1,5 @@
 import { auth, signIn } from "@/auth";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export default async function SignInPage({
@@ -41,7 +42,8 @@ export default async function SignInPage({
       </form>
 
       <p className="text-muted text-[0.78rem] mt-8">
-        Access is limited to qualified researchers per our research use policy.
+        Access is limited to qualified researchers per our research use policy. By signing in you agree to our{" "}
+        <Link href="/privacy" className="text-accent hover:underline">Privacy Policy</Link>.
       </p>
     </div>
   );

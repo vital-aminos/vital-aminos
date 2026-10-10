@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import AccessGate from "@/components/AccessGate";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import CookieNotice from "@/components/CookieNotice";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <main className="flex-1">{children}</main>
           <Footer />
         </AccessGate>
+        <CookieNotice />
       </body>
     </html>
   );

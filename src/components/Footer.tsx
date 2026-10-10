@@ -34,7 +34,7 @@ export default function Footer() {
             <h4 className={headingClass}>Policies</h4>
             <a href="#" className={linkClass}>Research use policy</a>
             <a href="#" className={linkClass}>Terms of sale</a>
-            <a href="#" className={linkClass}>Privacy</a>
+            <Link href="/privacy" className={linkClass}>Privacy</Link>
           </div>
         </div>
         <p className="text-muted text-[0.8rem] border-t border-line pt-6">
