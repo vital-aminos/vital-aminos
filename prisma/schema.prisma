@@ -77,6 +77,18 @@ model Item {
   updatedAt   DateTime @updatedAt
 
   orderItems OrderItem[]
+  image      ItemImage?
+}
+
+// Uploaded product photo, stored in the database and served by /api/item-image/[id].
+// Kept in its own table so list queries on Item never pull image bytes.
+model ItemImage {
+  itemId    String   @id
+  data      Bytes
+  mimeType  String
+  updatedAt DateTime @updatedAt
+
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
 }
 
 enum OrderStatus {

@@ -37,10 +37,10 @@ export default async function ItemPage({
           <img
             src={item.imageUrl}
             alt={item.name}
-            className="w-full rounded-2xl border border-line object-cover aspect-[4/3]"
+            className="w-full rounded-2xl border border-line object-contain p-6 bg-gradient-to-b from-[#0f1c33] to-[#07101e] aspect-[4/3]"
           />
         ) : (
-          <div className="aspect-[4/3] grid place-items-center text-accent font-serif text-3xl rounded-2xl border border-line bg-gradient-to-br from-[#eaf2ff] to-[#d4e3ff]">
+          <div className="aspect-[4/3] grid place-items-center text-accent font-serif text-3xl rounded-2xl border border-line bg-gradient-to-br from-[#0f1c33] to-[#07101e]">
             {item.name.split(" ")[0]}
           </div>
         )}

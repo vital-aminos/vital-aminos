@@ -28,7 +28,7 @@ export default async function SignInPage({
       >
         <button
           type="submit"
-          className="w-full inline-flex items-center justify-center gap-3 px-6 py-3.5 rounded-full font-semibold text-[0.95rem] border border-line-strong bg-white hover:border-accent hover:bg-accent-soft transition-colors"
+          className="w-full inline-flex items-center justify-center gap-3 px-6 py-3.5 rounded-full font-semibold text-[0.95rem] border border-line-strong bg-white/[0.04] hover:border-accent hover:bg-accent-soft transition-colors"
         >
           <svg width="18" height="18" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M23.52 12.27c0-.85-.07-1.67-.21-2.45H12v4.63h6.47a5.53 5.53 0 0 1-2.4 3.63v3h3.88c2.27-2.09 3.57-5.17 3.57-8.81Z" />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useRef, useState } from "react";
 import type { ItemFormState } from "@/actions/items";
 
 export type ItemFormValues = {
@@ -26,7 +26,9 @@ export default function ItemForm({
   submitLabel: string;
 }) {
   const [state, formAction, pending] = useActionState<ItemFormState, FormData>(action, {});
-  const [imageUrl, setImageUrl] = useState(initial?.imageUrl ?? "");
+  const [preview, setPreview] = useState<string | null>(initial?.imageUrl || null);
+  const [remove, setRemove] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const fieldError = (name: string) => state.fieldErrors?.[name];
 
@@ -80,27 +82,56 @@ export default function ItemForm({
         />
       </Field>
 
-      <Field label="Image URL" error={fieldError("imageUrl")} hint="Optional — leave blank to show a placeholder">
-        <div className="flex items-center gap-3">
-          {imageUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={imageUrl}
-              alt=""
-              className="w-14 h-14 rounded-lg object-cover border border-line shrink-0"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).style.visibility = "hidden";
+      <Field
+        label="Product photo"
+        error={fieldError("image")}
+        hint="PNG, JPEG or WebP, up to 5 MB. A vial on a dark background looks best — it's shown centered and uncropped. Leave empty to keep the current photo."
+      >
+        <div className="flex items-center gap-4">
+          <div className="w-24 h-32 rounded-lg border border-line-strong bg-bg-2 grid place-items-center overflow-hidden shrink-0">
+            {preview ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={preview} alt="" className="w-full h-full object-contain" />
+            ) : (
+              <span className="text-muted text-[0.7rem]">No photo</span>
+            )}
+          </div>
+          <div className="flex flex-col gap-2 min-w-0">
+            <input
+              ref={fileRef}
+              name="image"
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (preview?.startsWith("blob:")) URL.revokeObjectURL(preview);
+                setPreview(file ? URL.createObjectURL(file) : initial?.imageUrl || null);
+                if (file) setRemove(false);
               }}
+              className="text-[0.85rem] file:mr-3 file:rounded-full file:border-0 file:bg-accent file:text-accent-ink file:font-semibold file:px-4 file:py-2 file:cursor-pointer"
             />
-          ) : (
-            <div className="w-14 h-14 rounded-lg border border-dashed border-line-strong shrink-0" />
-          )}
-          <input
-            name="imageUrl"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            className="flex-1 bg-bg-2 border border-line-strong rounded-[10px] px-4 py-3"
-          />
+            {initial?.imageUrl && (
+              <span className="flex items-center gap-2 text-[0.82rem] text-muted">
+                <input
+                  id="removeImage"
+                  type="checkbox"
+                  name="removeImage"
+                  checked={remove}
+                  onChange={(e) => {
+                    setRemove(e.target.checked);
+                    if (e.target.checked) {
+                      if (fileRef.current) fileRef.current.value = "";
+                      setPreview(null);
+                    } else {
+                      setPreview(initial.imageUrl || null);
+                    }
+                  }}
+                  className="accent-accent"
+                />
+                <label htmlFor="removeImage">Remove current photo</label>
+              </span>
+            )}
+          </div>
         </div>
       </Field>
 

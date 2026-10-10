@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  experimental: {
+    // Product photos are uploaded through a Server Action (max 5 MB photo + form overhead).
+    serverActions: { bodySizeLimit: "6mb" },
+  },
 };
 
 export default nextConfig;

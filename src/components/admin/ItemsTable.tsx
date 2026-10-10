@@ -62,10 +62,10 @@ export default function ItemsTable({ items }: { items: AdminItemRow[] }) {
                         <img
                           src={item.imageUrl}
                           alt=""
-                          className="w-10 h-10 rounded-lg object-cover border border-line shrink-0"
+                          className="w-10 h-10 rounded-lg object-contain bg-[#07101e] border border-line shrink-0"
                         />
                       ) : (
-                        <div className="w-10 h-10 rounded-lg border border-line bg-gradient-to-br from-[#eaf2ff] to-[#d4e3ff] shrink-0" />
+                        <div className="w-10 h-10 rounded-lg border border-line bg-gradient-to-br from-[#0f1c33] to-[#07101e] shrink-0" />
                       )}
                       <div>
                         <Link
@@ -84,7 +84,7 @@ export default function ItemsTable({ items }: { items: AdminItemRow[] }) {
                       className={
                         item.active
                           ? "text-[0.76rem] font-semibold text-success border border-success/30 bg-success/10 rounded-full px-2.5 py-0.5"
-                          : "text-[0.76rem] font-semibold text-muted border border-line-strong bg-white rounded-full px-2.5 py-0.5"
+                          : "text-[0.76rem] font-semibold text-muted border border-line-strong bg-white/[0.02] rounded-full px-2.5 py-0.5"
                       }
                     >
                       {item.active ? "Visible" : "Hidden"}

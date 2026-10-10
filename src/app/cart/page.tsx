@@ -100,9 +100,9 @@ export default function CartPage() {
               >
                 {line.imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={line.imageUrl} alt={line.name} className="w-16 h-16 rounded-lg object-cover border border-line" />
+                  <img src={line.imageUrl} alt={line.name} className="w-16 h-16 rounded-lg object-contain bg-[#07101e] border border-line" />
                 ) : (
-                  <div className="w-16 h-16 rounded-lg grid place-items-center text-accent font-serif bg-gradient-to-br from-[#eaf2ff] to-[#d4e3ff] border border-line">
+                  <div className="w-16 h-16 rounded-lg grid place-items-center text-accent font-serif bg-gradient-to-br from-[#0f1c33] to-[#07101e] border border-line">
                     {line.name.split(" ")[0]}
                   </div>
                 )}
