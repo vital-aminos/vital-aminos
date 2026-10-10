@@ -8,6 +8,19 @@ import SearchBar from "@/components/SearchBar";
 export default async function Header() {
   const [session, discount] = await Promise.all([auth(), getDiscount()]);
 
+  // Members-only site: signed-out visitors only ever see the sign-in page, so
+  // show a bare brand bar with no navigation, search, cart or promo details.
+  if (!session?.user) {
+    return (
+      <header className="flex items-center justify-center py-[18px] px-[clamp(16px,5vw,56px)] border-b border-line bg-bg">
+        <span className="uppercase tracking-[0.08em] text-[1.15rem]">
+          <span className="font-extrabold">Vital</span>{" "}
+          <span className="font-normal text-accent">Aminos</span>
+        </span>
+      </header>
+    );
+  }
+
   const links = [
     { href: "/", label: "Home" },
     { href: "/compounds", label: "Compounds", hint: "Browse research peptides" },
