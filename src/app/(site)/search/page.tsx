@@ -28,6 +28,7 @@ export default async function SearchPage({
             OR: [
               { name: { contains: q, mode: "insensitive" } },
               { description: { contains: q, mode: "insensitive" } },
+              { category: { contains: q, mode: "insensitive" } },
               { note: { contains: q, mode: "insensitive" } },
               { batchNumber: { contains: q, mode: "insensitive" } },
             ],

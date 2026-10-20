@@ -1,14 +1,24 @@
 "use server";
 
+import { z } from "zod";
+import { cartKey, resolveStrength } from "@/lib/product-options";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/admin";
-import { applyDiscount, getDiscount } from "@/lib/settings";
+import { getDiscount } from "@/lib/settings";
+import { applyDiscount } from "@/lib/money";
 
-export type CartLine = { itemId: string; quantity: number };
+const cartSchema = z.array(z.object({
+  itemId: z.string().min(1).max(120),
+  quantity: z.number().int().min(1).max(99),
+  strength: z.string().min(1).max(80).optional(),
+})).max(100).refine(lines => new Set(lines.map(l => cartKey(l.itemId, l.strength))).size === lines.length, "Duplicate cart lines");
+export type CartLine = z.infer<typeof cartSchema>[number];
 
 /** Re-fetches current item data server-side for a set of cart lines (for display + safe pricing). */
 export async function getCartDetails(lines: CartLine[]) {
-  if (lines.length === 0) return { lines: [], totalCents: 0 };
+  await requireUser();
+  lines = cartSchema.parse(lines);
+  if (lines.length === 0) return { lines: [], totalCents: 0, unavailable: [] };
 
   const discount = await getDiscount();
   const ids = lines.map((l) => l.itemId);
@@ -19,23 +29,35 @@ export async function getCartDetails(lines: CartLine[]) {
     .map((line) => {
       const item = byId.get(line.itemId);
       if (!item || !item.active) return null;
-      const quantity = Math.max(1, Math.min(99, Math.floor(line.quantity)));
+      // Never silently substitute a different strength for one already in the cart.
+      const option = resolveStrength(item.strengths, item.priceCents, line.strength);
+      if (!option) return null;
+      const price = option.priceCents;
+      const quantity = line.quantity;
       return {
         itemId: item.id,
+        cartKey: cartKey(item.id, option.strength),
+        strength: option.strength,
         slug: item.slug,
         name: item.name,
         imageUrl: item.imageUrl,
-        originalPriceCents: item.priceCents,
-        priceCents: applyDiscount(item.priceCents, discount.percent),
+        originalPriceCents: price,
+        priceCents: applyDiscount(price, discount.percent),
         discountPercent: discount.percent,
         quantity,
-        lineTotalCents: applyDiscount(item.priceCents, discount.percent) * quantity,
+        lineTotalCents: applyDiscount(price, discount.percent) * quantity,
       };
     })
     .filter((l): l is NonNullable<typeof l> => l !== null);
 
   const totalCents = detailed.reduce((sum, l) => sum + l.lineTotalCents, 0);
-  return { lines: detailed, totalCents };
+  const availableKeys = new Set(detailed.map(l => l.cartKey));
+  const unavailable = lines.filter(l => !availableKeys.has(cartKey(l.itemId, l.strength))).map(l => ({
+    cartKey: cartKey(l.itemId, l.strength),
+    name: byId.get(l.itemId)?.name ?? "Unavailable product",
+    strength: l.strength,
+  }));
+  return { lines: detailed, totalCents, unavailable };
 }
 
 export type PlaceOrderResult = { orderId: string } | { error: string };
@@ -44,7 +66,9 @@ export type PlaceOrderResult = { orderId: string } | { error: string };
 export async function placeOrder(lines: CartLine[]): Promise<PlaceOrderResult> {
   const user = await requireUser();
 
+  if (!cartSchema.safeParse(lines).success) return { error: "Your cart contains invalid quantities or options. Please update it and try again." };
   const { lines: detailed, totalCents } = await getCartDetails(lines);
+  if (detailed.length !== lines.length) return { error: "Some products or strengths are no longer available. Please review your cart." };
   if (detailed.length === 0) {
     return { error: "Your cart is empty or those items are no longer available." };
   }
@@ -56,6 +80,7 @@ export async function placeOrder(lines: CartLine[]): Promise<PlaceOrderResult> {
       items: {
         create: detailed.map((l) => ({
           itemId: l.itemId,
+          strength: l.strength,
           quantity: l.quantity,
           priceCents: l.priceCents,
         })),

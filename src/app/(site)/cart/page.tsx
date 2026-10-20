@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { onCartChange, readCart, removeFromCart, setCartQuantity } from "@/lib/cart-client";
 import { getCartDetails, placeOrder } from "@/actions/orders";
+import { cartEntries } from "@/lib/product-options";
+import { clearCart } from "@/lib/cart-client";
 import { formatCents } from "@/lib/money";
 
 type CartLine = Awaited<ReturnType<typeof getCartDetails>>["lines"][number];
@@ -13,16 +15,18 @@ export default function CartPage() {
   const router = useRouter();
   const [lines, setLines] = useState<CartLine[] | null>(null);
   const [totalCents, setTotalCents] = useState(0);
+  const [unavailable, setUnavailable] = useState<Awaited<ReturnType<typeof getCartDetails>>["unavailable"]>([]);
   const [placing, startPlacing] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [placed, setPlaced] = useState<string | null>(null);
 
   async function refresh() {
     const cart = readCart();
-    const entries = Object.entries(cart).map(([itemId, quantity]) => ({ itemId, quantity }));
+    const entries = cartEntries(cart);
     const result = await getCartDetails(entries);
     setLines(result.lines);
     setTotalCents(result.totalCents);
+    setUnavailable(result.unavailable);
   }
 
   useEffect(() => {
@@ -44,14 +48,14 @@ export default function CartPage() {
   function handlePlaceOrder() {
     setError(null);
     const cart = readCart();
-    const entries = Object.entries(cart).map(([itemId, quantity]) => ({ itemId, quantity }));
+    const entries = cartEntries(cart);
     startPlacing(async () => {
       const result = await placeOrder(entries);
       if ("error" in result) {
         setError(result.error);
         return;
       }
-      window.localStorage.removeItem("va_cart");
+      clearCart();
       setPlaced(result.orderId);
       router.refresh();
     });
@@ -83,6 +87,18 @@ export default function CartPage() {
     <div className="max-w-[800px] mx-auto px-6 py-14 md:py-20">
       <h1 className="text-[1.9rem] mb-8">Your cart</h1>
 
+      {unavailable.length > 0 && (
+        <div className="border border-danger/40 rounded-xl p-4 mb-6" role="alert">
+          <p className="text-sm text-muted mb-3">These products or strengths are no longer available. Remove them and choose an available option from the product page.</p>
+          {unavailable.map(line => (
+            <div key={line.cartKey} className="flex items-center justify-between gap-3 py-2 text-sm">
+              <span>{line.name}{line.strength ? ` (${line.strength})` : ""}</span>
+              <button type="button" onClick={() => handleRemove(line.cartKey)} className="text-danger">Remove</button>
+            </div>
+          ))}
+        </div>
+      )}
+
       {lines.length === 0 ? (
         <p className="text-muted">
           Your cart is empty.{" "}
@@ -95,7 +111,7 @@ export default function CartPage() {
           <div className="flex flex-col gap-4 mb-10">
             {lines.map((line) => (
               <div
-                key={line.itemId}
+                key={line.cartKey}
                 className="flex items-center gap-4 bg-panel border border-line rounded-2xl p-4"
               >
                 {line.imageUrl ? (
@@ -110,6 +126,7 @@ export default function CartPage() {
                   <Link href={`/item/${line.slug}`} className="font-semibold hover:text-accent transition-colors">
                     {line.name}
                   </Link>
+                  {line.strength && <p className="text-muted text-sm">{line.strength}</p>}
                   <p className="text-muted text-[0.85rem]">
                     {line.discountPercent > 0 && (
                       <s className="mr-2 opacity-80">{formatCents(line.originalPriceCents)}</s>
@@ -122,13 +139,13 @@ export default function CartPage() {
                   min={1}
                   max={99}
                   value={line.quantity}
-                  onChange={(e) => handleQuantity(line.itemId, Number(e.target.value))}
+                  onChange={(e) => handleQuantity(line.cartKey, Number(e.target.value))}
                   className="w-16 bg-bg-2 border border-line-strong rounded-lg px-2 py-1.5 text-center"
                 />
                 <span className="w-24 text-right font-semibold">{formatCents(line.lineTotalCents)}</span>
                 <button
                   type="button"
-                  onClick={() => handleRemove(line.itemId)}
+                  onClick={() => handleRemove(line.cartKey)}
                   className="text-muted hover:text-danger transition-colors text-[0.85rem]"
                 >
                   Remove
@@ -146,7 +163,7 @@ export default function CartPage() {
 
           <button
             type="button"
-            disabled={placing}
+            disabled={placing || unavailable.length > 0}
             onClick={handlePlaceOrder}
             className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-semibold text-[0.95rem] bg-gradient-to-br from-accent to-accent-2 text-accent-ink disabled:opacity-60"
           >

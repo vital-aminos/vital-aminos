@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { updateItem } from "@/actions/items";
+import { readStrengths } from "@/lib/product-options";
 import ItemForm from "@/components/admin/ItemForm";
 
 export default async function EditItemPage({
@@ -21,6 +22,8 @@ export default async function EditItemPage({
         action={boundUpdate}
         submitLabel="Save changes"
         initial={{
+          category: item.category ?? "",
+          strengths: readStrengths(item.strengths),
           name: item.name,
           slug: item.slug,
           description: item.description,

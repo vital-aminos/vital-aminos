@@ -4,6 +4,8 @@ import { useActionState, useRef, useState } from "react";
 import type { ItemFormState } from "@/actions/items";
 
 export type ItemFormValues = {
+  category: string;
+  strengths: { label: string; priceCents: number }[];
   name: string;
   slug: string;
   description: string;
@@ -28,6 +30,7 @@ export default function ItemForm({
   const [state, formAction, pending] = useActionState<ItemFormState, FormData>(action, {});
   const [preview, setPreview] = useState<string | null>(initial?.imageUrl || null);
   const [remove, setRemove] = useState(false);
+  const [strengths, setStrengths] = useState(() => (initial?.strengths ?? []).map(o => ({ label: o.label, price: (o.priceCents / 100).toFixed(2) })));
   const fileRef = useRef<HTMLInputElement>(null);
 
   const fieldError = (name: string) => state.fieldErrors?.[name];
@@ -63,6 +66,29 @@ export default function ItemForm({
           className="w-full bg-bg-2 border border-line-strong rounded-[10px] px-4 py-3"
         />
       </Field>
+
+      <Field label="Category" error={fieldError("category")} hint="Optional — products in the same category appear as similar products.">
+        <input name="category" defaultValue={initial?.category} maxLength={80} placeholder="e.g. Research peptides" className="w-full bg-bg-2 border border-line-strong rounded-[10px] px-4 py-3" />
+      </Field>
+
+      <fieldset className="border border-line rounded-xl p-4 flex flex-col gap-3">
+        <legend className="text-sm text-muted px-2">Dosages / strengths</legend>
+        <p className="text-muted text-xs">Optional. Add a label and USD price for each option. Without options, the product uses its standard price.</p>
+        <input type="hidden" name="strengths" value={JSON.stringify(strengths.map(o => ({ label: o.label, priceCents: o.price.trim() === "" ? null : Math.round(Number(o.price) * 100) })))} />
+        {strengths.map((option, index) => (
+          <div key={index} className="flex gap-2 items-end flex-wrap">
+            <label className="flex-1 min-w-32 text-xs text-muted">Strength
+              <input aria-label={`Strength ${index + 1}`} required maxLength={80} placeholder="e.g. 5 mg" value={option.label} onChange={e => setStrengths(strengths.map((o, i) => i === index ? { ...o, label: e.target.value } : o))} className="block w-full bg-bg-2 border border-line-strong rounded-lg px-3 py-2 mt-1" />
+            </label>
+            <label className="flex-1 min-w-28 text-xs text-muted">Price (USD)
+              <input aria-label={`Strength ${index + 1} price`} required type="number" min="0" step="0.01" value={option.price} onChange={e => setStrengths(strengths.map((o, i) => i === index ? { ...o, price: e.target.value } : o))} className="block w-full bg-bg-2 border border-line-strong rounded-lg px-3 py-2 mt-1" />
+            </label>
+            <button type="button" aria-label={`Remove strength ${index + 1}`} onClick={() => setStrengths(strengths.filter((_, i) => i !== index))} className="px-3 py-2 text-danger text-sm">Remove</button>
+          </div>
+        ))}
+        {fieldError("strengths") && <p role="alert" className="text-danger text-xs">{fieldError("strengths")}</p>}
+        <button type="button" disabled={strengths.length >= 30} onClick={() => setStrengths([...strengths, { label: "", price: initial?.price ?? "" }])} className="self-start text-accent text-sm disabled:opacity-50">+ Add strength</button>
+      </fieldset>
 
       <Field label="Short note" error={fieldError("note")} hint="Optional — shown under the price, e.g. “Single vial • 10 mg”">
         <input

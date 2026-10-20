@@ -10,3 +10,8 @@ export function dollarsToCents(input: string | number): number {
   if (!Number.isFinite(n) || n < 0) return NaN;
   return Math.round(n * 100);
 }
+
+export function applyDiscount(cents: number, percent: number): number {
+  if (percent <= 0) return cents;
+  return Math.round((cents * (100 - percent)) / 100);
+}

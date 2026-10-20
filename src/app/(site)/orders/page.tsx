@@ -39,7 +39,7 @@ export default async function OrdersPage() {
               <ul className="text-[0.9rem] text-muted mb-3">
                 {order.items.map((oi) => (
                   <li key={oi.id}>
-                    {oi.quantity}× {oi.item.name} — {formatCents(oi.priceCents * oi.quantity)}
+                    {oi.quantity}× {oi.item.name}{oi.strength ? ` (${oi.strength})` : ""} — {formatCents(oi.priceCents * oi.quantity)}
                   </li>
                 ))}
               </ul>

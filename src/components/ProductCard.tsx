@@ -1,3 +1,4 @@
+import { readStrengths } from "@/lib/product-options";
 import Link from "next/link";
 import Price from "@/components/Price";
 import AddToCartButton from "@/components/AddToCartButton";
@@ -7,6 +8,8 @@ export type ProductCardItem = {
   slug: string;
   name: string;
   priceCents: number;
+  category?: string | null;
+  strengths?: unknown;
   note?: string | null;
   imageUrl?: string | null;
 };
@@ -20,6 +23,8 @@ export default function ProductCard({
   isSignedIn: boolean;
   discountPercent?: number;
 }) {
+  const strengths = readStrengths(item.strengths);
+  const startingPrice = strengths.length ? Math.min(...strengths.map(o => o.priceCents)) : item.priceCents;
   const initials = item.name.split(" ")[0];
 
   return (
@@ -42,9 +47,11 @@ export default function ProductCard({
         <Link href={`/item/${item.slug}`} className="font-semibold text-[1rem] hover:text-accent transition-colors">
           {item.name}
         </Link>
-        <Price cents={item.priceCents} percent={discountPercent} className="text-accent text-[0.95rem] font-semibold" />
+        {item.category && <span className="text-muted text-xs">{item.category}</span>}
+        {strengths.length > 0 && <span className="text-muted text-xs">From</span>}
+        <Price cents={startingPrice} percent={discountPercent} className="text-accent text-[0.95rem] font-semibold" />
         {item.note && <span className="text-muted text-[0.8rem] mb-3.5">{item.note} • COA included</span>}
-        <AddToCartButton itemId={item.id} isSignedIn={isSignedIn} />
+        {strengths.length > 0 ? <Link href={`/item/${item.slug}`} className="mt-auto text-center rounded-full border border-line-strong px-6 py-3 text-sm font-semibold hover:text-accent hover:border-accent">Choose strength</Link> : <AddToCartButton itemId={item.id} isSignedIn={isSignedIn} />}
       </div>
     </article>
   );

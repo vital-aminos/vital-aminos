@@ -57,22 +57,14 @@ export default async function HomePage() {
             ))}
           </ul>
         </div>
-        <div className="relative h-[260px] md:h-[360px] flex gap-6 items-end justify-center">
-          <div className="absolute -inset-x-0 -inset-y-[10%] blur-2xl" style={{ background: "radial-gradient(closest-side, rgba(43,156,255,0.22), transparent)" }} />
-          {[0, -2, -4].map((delay, i) => (
-            <div
-              key={i}
-              className="relative w-[74px] rounded-t-2xl rounded-b-lg border border-line-strong backdrop-blur-sm"
-              style={{
-                height: i === 1 ? 278 : i === 2 ? 190 : 220,
-                background:
-                  "linear-gradient(180deg, rgba(43,156,255,0.4), rgba(29,111,232,0.12) 44%, var(--panel) 45%)",
-                animation: `float 6s ease-in-out ${delay}s infinite`,
-              }}
-            >
-              <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-9 h-4 rounded-[5px] bg-[#16345f]" />
+        <div className="aspect-video w-full rounded-2xl border border-line-strong bg-gradient-to-br from-panel-2 to-bg-2 overflow-hidden grid place-items-center shadow-[0_20px_70px_-30px_var(--accent-glow)]" role="img" aria-label="Video placeholder">
+          <div className="text-center p-8">
+            <div className="mx-auto mb-4 w-16 h-16 rounded-full border border-accent/40 bg-accent-soft grid place-items-center text-accent" aria-hidden="true">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
             </div>
-          ))}
+            <p className="font-semibold text-lg">A closer look at Vital Aminos</p>
+            <p className="text-muted text-sm mt-2">Video coming soon</p>
+          </div>
         </div>
       </section>
 

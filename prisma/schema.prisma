@@ -67,6 +67,8 @@ model Item {
   name        String
   description String   @db.Text
   note        String?
+  category    String?
+  strengths   Json     @default("[]")
   priceCents  Int
   imageUrl    String?
   batchNumber String?
@@ -115,6 +117,7 @@ model OrderItem {
   orderId    String
   itemId     String
   quantity   Int
+  strength   String?
   priceCents Int // price at time of order
 
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)

@@ -1,9 +1,11 @@
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import Price from "@/components/Price";
+import ProductPurchase from "@/components/ProductPurchase";
+import ProductCard from "@/components/ProductCard";
+import { readStrengths } from "@/lib/product-options";
 import { getDiscount } from "@/lib/settings";
-import AddToCartButton from "@/components/AddToCartButton";
+
 
 export const dynamic = "force-dynamic";
 
@@ -23,6 +25,11 @@ export default async function ItemPage({
   if (!session?.user) redirect(`/sign-in?callbackUrl=${encodeURIComponent(`/item/${slug}`)}`);
 
   if (!item || (!item.active && !session?.user?.isAdmin)) notFound();
+
+  const similar = item.category ? await prisma.item.findMany({
+    where: { active: true, id: { not: item.id }, category: { equals: item.category, mode: "insensitive" } },
+    orderBy: { createdAt: "desc" }, take: 3,
+  }) : [];
 
   return (
     <div className="max-w-[1140px] mx-auto px-[clamp(16px,5vw,56px)] py-14 md:py-20">
@@ -47,19 +54,22 @@ export default async function ItemPage({
 
         <div>
           <h1 className="text-[2rem] mb-3">{item.name}</h1>
-          <p className="mb-5">
-            <Price cents={item.priceCents} percent={discount.percent} className="text-accent text-[1.3rem] font-semibold" />
-          </p>
+          {item.category && <p className="text-accent text-sm mb-4">{item.category}</p>}
           {item.note && <p className="text-muted text-[0.9rem] mb-6">{item.note} • COA included</p>}
           <p className="text-muted leading-relaxed whitespace-pre-line mb-8">{item.description}</p>
 
-          <AddToCartButton
-            itemId={item.id}
-            isSignedIn={!!session?.user}
-            className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full font-semibold text-[0.95rem] bg-gradient-to-br from-accent to-accent-2 text-accent-ink shadow-[0_10px_30px_-10px_var(--accent-glow)] hover:-translate-y-0.5 transition-transform"
-          />
+          <ProductPurchase itemId={item.id} priceCents={item.priceCents} strengths={readStrengths(item.strengths)} discountPercent={discount.percent} active={item.active} />
         </div>
       </div>
+      {similar.length > 0 && (
+        <section className="mt-16 pt-10 border-t border-line" aria-labelledby="similar-title">
+          <h2 id="similar-title" className="text-2xl mb-3">Similar products</h2>
+          <p className="text-muted text-sm mb-7">More from {item.category}.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {similar.map(product => <ProductCard key={product.id} item={product} isSignedIn discountPercent={discount.percent} />)}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

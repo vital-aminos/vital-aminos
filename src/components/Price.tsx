@@ -1,5 +1,5 @@
 import { formatCents } from "@/lib/money";
-import { applyDiscount } from "@/lib/settings";
+import { applyDiscount } from "@/lib/money";
 
 /** Shows the struck-through original price plus the discounted price when percent > 0. */
 export default function Price({

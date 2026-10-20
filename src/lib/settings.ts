@@ -12,8 +12,3 @@ export async function getDiscount(): Promise<Discount> {
     return { enabled: false, percent: 0 };
   }
 }
-
-export function applyDiscount(cents: number, percent: number): number {
-  if (percent <= 0) return cents;
-  return Math.round((cents * (100 - percent)) / 100);
-}

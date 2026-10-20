@@ -7,6 +7,8 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/admin";
 import { dollarsToCents } from "@/lib/money";
 
+import { strengthsSchema } from "@/lib/product-options";
+
 const itemSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(120),
   slug: z
@@ -16,6 +18,8 @@ const itemSchema = z.object({
     .max(120)
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Use lowercase letters, numbers, and hyphens only"),
   description: z.string().trim().min(1, "Description is required").max(4000),
+  category: z.string().trim().max(80),
+  strengths: strengthsSchema,
   note: z.string().trim().max(200).optional().or(z.literal("")),
   price: z.string().refine((v) => {
     const cents = dollarsToCents(v);
@@ -36,7 +40,11 @@ const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const IMAGE_TYPES = ["image/png", "image/jpeg", "image/webp"];
 
 function parseForm(formData: FormData) {
+  let strengths: unknown;
+  try { strengths = JSON.parse(String(formData.get("strengths") ?? "[]")); } catch { strengths = null; }
   const raw = {
+    category: String(formData.get("category") ?? ""),
+    strengths,
     name: String(formData.get("name") ?? ""),
     slug: String(formData.get("slug") ?? ""),
     description: String(formData.get("description") ?? ""),
@@ -103,6 +111,8 @@ export async function createItem(
 
   const created = await prisma.item.create({
     data: {
+      category: data.category || null,
+      strengths: data.strengths,
       name: data.name,
       slug: data.slug,
       description: data.description,
@@ -156,6 +166,8 @@ export async function updateItem(
   await prisma.item.update({
     where: { id },
     data: {
+      category: data.category || null,
+      strengths: data.strengths,
       name: data.name,
       slug: data.slug,
       description: data.description,

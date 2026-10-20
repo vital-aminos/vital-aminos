@@ -1,0 +1,3 @@
+ALTER TABLE "Item" ADD COLUMN "category" TEXT;
+ALTER TABLE "Item" ADD COLUMN "strengths" JSONB NOT NULL DEFAULT '[]';
+ALTER TABLE "OrderItem" ADD COLUMN "strength" TEXT;
