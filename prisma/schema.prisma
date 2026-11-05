@@ -75,6 +75,7 @@ model Item {
   purity      String?
   coaUrl      String?
   active      Boolean  @default(true)
+  outOfStock  Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

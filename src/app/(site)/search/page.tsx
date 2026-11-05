@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { getDiscount } from "@/lib/settings";
 import { GUEST_GLIMPSE, PAGE_WRAP } from "@/lib/catalog";
 import ProductCard from "@/components/ProductCard";
+import ProductSort from "@/components/ProductSort";
+import { normalizeSort, sortProducts } from "@/lib/product-sort";
 import CatalogLock from "@/components/CatalogLock";
 import SearchBar from "@/components/SearchBar";
 
@@ -13,9 +15,10 @@ export const dynamic = "force-dynamic";
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string | string[] }>;
+  searchParams: Promise<{ q?: string | string[]; sort?: string | string[] }>;
 }) {
-  const { q: rawQ } = await searchParams;
+  const { q: rawQ, sort: rawSort } = await searchParams;
+  const sort = normalizeSort(rawSort);
   const q = (Array.isArray(rawQ) ? rawQ[0] : rawQ)?.trim().slice(0, 100) ?? "";
 
   const [session, discount, items] = await Promise.all([
@@ -34,19 +37,20 @@ export default async function SearchPage({
             ],
           },
           orderBy: { name: "asc" },
-          take: 60,
         })
       : Promise.resolve([]),
   ]);
 
   const isSignedIn = !!session?.user;
-  const visible = isSignedIn ? items : items.slice(0, GUEST_GLIMPSE);
+  const sorted = sortProducts(items, sort, discount.percent);
+  const visible = isSignedIn ? sorted : sorted.slice(0, GUEST_GLIMPSE);
 
   return (
     <div className={`${PAGE_WRAP} py-14 md:py-20`}>
       <h1 className="text-[clamp(1.9rem,4vw,2.6rem)] mb-6">Search</h1>
       <SearchBar defaultValue={q} className="max-w-[520px] mb-10" autoFocus={!q} />
 
+      {q && <ProductSort sort={sort} query={q} />}
       {!q ? (
         <p className="text-muted">Search by compound name, description, or batch number.</p>
       ) : items.length === 0 ? (

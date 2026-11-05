@@ -11,6 +11,7 @@ export type AdminItemRow = {
   slug: string;
   priceCents: number;
   active: boolean;
+  outOfStock: boolean;
   imageUrl: string | null;
   updatedAt: string | Date;
 };
@@ -89,6 +90,7 @@ export default function ItemsTable({ items }: { items: AdminItemRow[] }) {
                     >
                       {item.active ? "Visible" : "Hidden"}
                     </span>
+                    {item.outOfStock && <span className="block text-danger text-xs mt-2">Out of stock</span>}
                   </td>
                   <td className="px-4 py-3 text-muted">
                     {new Date(item.updatedAt).toLocaleDateString()}

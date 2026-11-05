@@ -8,6 +8,7 @@ export type ProductCardItem = {
   slug: string;
   name: string;
   priceCents: number;
+  outOfStock?: boolean;
   category?: string | null;
   strengths?: unknown;
   note?: string | null;
@@ -51,7 +52,7 @@ export default function ProductCard({
         {strengths.length > 0 && <span className="text-muted text-xs">From</span>}
         <Price cents={startingPrice} percent={discountPercent} className="text-accent text-[0.95rem] font-semibold" />
         {item.note && <span className="text-muted text-[0.8rem] mb-3.5">{item.note} • COA included</span>}
-        {strengths.length > 0 ? <Link href={`/item/${item.slug}`} className="mt-auto text-center rounded-full border border-line-strong px-6 py-3 text-sm font-semibold hover:text-accent hover:border-accent">Choose strength</Link> : <AddToCartButton itemId={item.id} isSignedIn={isSignedIn} />}
+        {item.outOfStock ? <span className="mt-auto text-center rounded-full border border-danger/40 px-6 py-3 text-sm font-semibold text-danger">Out of stock</span> : strengths.length > 0 ? <Link href={`/item/${item.slug}`} className="mt-auto text-center rounded-full border border-line-strong px-6 py-3 text-sm font-semibold hover:text-accent hover:border-accent">Choose strength</Link> : <AddToCartButton itemId={item.id} isSignedIn={isSignedIn} />}
       </div>
     </article>
   );

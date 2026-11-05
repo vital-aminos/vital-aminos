@@ -14,8 +14,8 @@ export default async function Header() {
     return (
       <header className="flex items-center justify-center py-[18px] px-[clamp(16px,5vw,56px)] border-b border-line bg-bg">
         <span className="uppercase tracking-[0.08em] text-[1.15rem]">
-          <span className="font-extrabold">Vital</span>{" "}
-          <span className="font-normal text-accent">Aminos</span>
+          <span className="font-extrabold text-white">Vital</span>{" "}
+          <span className="font-normal text-white">Aminos</span>
         </span>
       </header>
     );
@@ -56,8 +56,8 @@ export default async function Header() {
             LOGO
           </span>
           <span>
-            <span className="font-extrabold">Vital</span>{" "}
-            <span className="font-normal text-accent">Aminos</span>
+            <span className="font-extrabold text-white">Vital</span>{" "}
+            <span className="font-normal text-white">Aminos</span>
           </span>
         </Link>
 

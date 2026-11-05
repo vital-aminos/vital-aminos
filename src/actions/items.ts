@@ -28,6 +28,7 @@ const itemSchema = z.object({
   batchNumber: z.string().trim().max(60).optional().or(z.literal("")),
   purity: z.string().trim().max(30).optional().or(z.literal("")),
   coaUrl: z.string().trim().url().max(500).optional().or(z.literal("")),
+  outOfStock: z.boolean(),
   active: z.coerce.boolean().optional(),
 });
 
@@ -53,6 +54,7 @@ function parseForm(formData: FormData) {
     batchNumber: String(formData.get("batchNumber") ?? ""),
     purity: String(formData.get("purity") ?? ""),
     coaUrl: String(formData.get("coaUrl") ?? ""),
+    outOfStock: formData.get("outOfStock") === "on",
     active: formData.get("active") === "on",
   };
   return itemSchema.safeParse(raw);
@@ -111,6 +113,7 @@ export async function createItem(
 
   const created = await prisma.item.create({
     data: {
+      outOfStock: data.outOfStock,
       category: data.category || null,
       strengths: data.strengths,
       name: data.name,
@@ -166,6 +169,7 @@ export async function updateItem(
   await prisma.item.update({
     where: { id },
     data: {
+      outOfStock: data.outOfStock,
       category: data.category || null,
       strengths: data.strengths,
       name: data.name,

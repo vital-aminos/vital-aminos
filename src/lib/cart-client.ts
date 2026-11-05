@@ -13,8 +13,8 @@ export function readCart(): CartMap {
     const raw = window.localStorage.getItem(CART_KEY);
     if (!raw) return {};
     const parsed = JSON.parse(raw);
-    if (!parsed || typeof parsed !== "object") return {};
-    return parsed as CartMap;
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
+    return Object.fromEntries(Object.entries(parsed).filter(([, q]) => typeof q === "number" && Number.isInteger(q) && q >= 1 && q <= 99)) as CartMap;
   } catch {
     return {};
   }
@@ -36,6 +36,7 @@ export function addToCart(itemId: string, quantity = 1) {
 }
 
 export function setCartQuantity(itemId: string, quantity: number) {
+  if (!Number.isFinite(quantity)) return;
   const cart = readCart();
   if (quantity <= 0) {
     delete cart[itemId];

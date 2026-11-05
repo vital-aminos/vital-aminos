@@ -4,19 +4,23 @@ import { prisma } from "@/lib/prisma";
 import { getDiscount } from "@/lib/settings";
 import { GUEST_GLIMPSE, PAGE_WRAP } from "@/lib/catalog";
 import ProductCard from "@/components/ProductCard";
+import ProductSort from "@/components/ProductSort";
+import { normalizeSort, sortProducts } from "@/lib/product-sort";
 import CatalogLock from "@/components/CatalogLock";
 
 export const metadata: Metadata = { title: "Compounds — Vital Aminos" };
 export const dynamic = "force-dynamic";
 
-export default async function CompoundsPage() {
+export default async function CompoundsPage({ searchParams }: { searchParams: Promise<{ sort?: string | string[] }> }) {
+  const sort = normalizeSort((await searchParams).sort);
   const [session, items, discount] = await Promise.all([
     auth(),
     prisma.item.findMany({ where: { active: true }, orderBy: { createdAt: "desc" } }),
     getDiscount(),
   ]);
   const isSignedIn = !!session?.user;
-  const visible = isSignedIn ? items : items.slice(0, GUEST_GLIMPSE);
+  const sorted = sortProducts(items, sort, discount.percent);
+  const visible = isSignedIn ? sorted : sorted.slice(0, GUEST_GLIMPSE);
 
   return (
     <div className={`${PAGE_WRAP} py-14 md:py-20`}>
@@ -26,6 +30,7 @@ export default async function CompoundsPage() {
           Every listing ships with a batch-specific Certificate of Analysis. For research use only.
         </p>
       </div>
+      <ProductSort sort={sort} />
       {items.length === 0 ? (
         <p className="text-muted">No products are listed yet.</p>
       ) : (

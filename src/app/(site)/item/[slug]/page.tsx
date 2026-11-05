@@ -58,7 +58,7 @@ export default async function ItemPage({
           {item.note && <p className="text-muted text-[0.9rem] mb-6">{item.note} • COA included</p>}
           <p className="text-muted leading-relaxed whitespace-pre-line mb-8">{item.description}</p>
 
-          <ProductPurchase itemId={item.id} priceCents={item.priceCents} strengths={readStrengths(item.strengths)} discountPercent={discount.percent} active={item.active} />
+          <ProductPurchase itemId={item.id} priceCents={item.priceCents} strengths={readStrengths(item.strengths)} discountPercent={discount.percent} active={item.active} outOfStock={item.outOfStock} />
         </div>
       </div>
       {similar.length > 0 && (

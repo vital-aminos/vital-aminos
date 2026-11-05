@@ -16,6 +16,7 @@ export type ItemFormValues = {
   purity: string;
   coaUrl: string;
   active: boolean;
+  outOfStock: boolean;
 };
 
 export default function ItemForm({
@@ -193,6 +194,11 @@ export default function ItemForm({
           className="accent-accent w-[17px] h-[17px]"
         />
         <span>Visible in the shop</span>
+      </label>
+
+      <label className="flex items-center gap-3 text-[0.9rem]">
+        <input type="checkbox" name="outOfStock" defaultChecked={initial?.outOfStock ?? false} className="accent-accent w-[17px] h-[17px]" />
+        <span>Out of stock — keep visible, disable purchases</span>
       </label>
 
       {state.error && <p className="text-danger text-[0.85rem]">{state.error}</p>}

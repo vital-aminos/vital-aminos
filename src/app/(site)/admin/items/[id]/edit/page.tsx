@@ -34,6 +34,7 @@ export default async function EditItemPage({
           purity: item.purity ?? "",
           coaUrl: item.coaUrl ?? "",
           active: item.active,
+          outOfStock: item.outOfStock,
         }}
       />
     </div>

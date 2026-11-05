@@ -25,7 +25,7 @@ export default async function HomePage() {
           <p className="inline-block uppercase tracking-[0.22em] text-[0.68rem] text-accent mb-3 font-bold">
             For Research Use Only
           </p>
-          <h1 className="text-[clamp(2.4rem,5.5vw,3.7rem)] mb-5 bg-gradient-to-b from-white to-[#9cc4f5] bg-clip-text text-transparent">
+          <h1 className="text-[clamp(2.4rem,5.5vw,3.7rem)] mb-5 text-white">
             High-Purity Research Peptides
           </h1>
           <p className="text-muted text-[1.08rem] max-w-[46ch]">

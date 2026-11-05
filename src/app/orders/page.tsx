@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import Link from "next/link";
 import { getMyOrders } from "@/actions/orders";
 import { formatCents } from "@/lib/money";
@@ -10,6 +11,14 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 export default async function OrdersPage() {
+  const session = await auth();
+  if (!session?.user) return (
+    <div className="max-w-[800px] mx-auto px-6 py-14 md:py-20">
+      <h1 className="text-[1.9rem] mb-5">Order history</h1>
+      <p className="text-muted mb-6">Sign in with the Google account used to place your orders to view their details and status.</p>
+      <Link href="/sign-in?callbackUrl=%2Forders" className="inline-flex rounded-full bg-accent text-accent-ink px-6 py-3 font-semibold">Sign in to view orders</Link>
+    </div>
+  );
   const orders = await getMyOrders();
 
   return (
@@ -19,7 +28,7 @@ export default async function OrdersPage() {
       {orders.length === 0 ? (
         <p className="text-muted">
           You haven&apos;t placed any orders yet.{" "}
-          <Link href="/#shop" className="text-accent hover:underline">
+          <Link href="/compounds" className="text-accent hover:underline">
             Browse products →
           </Link>
         </p>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
+import CartQuantity from "@/components/CartQuantity";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { onCartChange, readCart, removeFromCart, setCartQuantity } from "@/lib/cart-client";
@@ -13,6 +14,8 @@ type CartLine = Awaited<ReturnType<typeof getCartDetails>>["lines"][number];
 
 export default function CartPage() {
   const router = useRouter();
+  const refreshVersion = useRef(0);
+  const [refreshing, setRefreshing] = useState(false);
   const [lines, setLines] = useState<CartLine[] | null>(null);
   const [totalCents, setTotalCents] = useState(0);
   const [unavailable, setUnavailable] = useState<Awaited<ReturnType<typeof getCartDetails>>["unavailable"]>([]);
@@ -23,10 +26,22 @@ export default function CartPage() {
   async function refresh() {
     const cart = readCart();
     const entries = cartEntries(cart);
-    const result = await getCartDetails(entries);
-    setLines(result.lines);
-    setTotalCents(result.totalCents);
-    setUnavailable(result.unavailable);
+    const version = ++refreshVersion.current;
+    setRefreshing(true);
+    try {
+      const result = await getCartDetails(entries);
+      if (version !== refreshVersion.current) return;
+      setLines(result.lines);
+      setTotalCents(result.totalCents);
+      setUnavailable(result.unavailable);
+      setError(null);
+    } catch {
+      if (version !== refreshVersion.current) return;
+      setError("Couldn't update your cart. Please refresh the page and try again.");
+      setLines(current => current ?? []);
+    } finally {
+      if (version === refreshVersion.current) setRefreshing(false);
+    }
   }
 
   useEffect(() => {
@@ -38,6 +53,7 @@ export default function CartPage() {
   }, []);
 
   function handleQuantity(itemId: string, quantity: number) {
+    setLines(current => current?.map(line => line.cartKey === itemId ? { ...line, quantity, lineTotalCents: line.priceCents * quantity } : line) ?? null);
     setCartQuantity(itemId, quantity);
   }
 
@@ -55,8 +71,8 @@ export default function CartPage() {
         setError(result.error);
         return;
       }
-      clearCart();
       setPlaced(result.orderId);
+      clearCart();
       router.refresh();
     });
   }
@@ -87,12 +103,13 @@ export default function CartPage() {
     <div className="max-w-[800px] mx-auto px-6 py-14 md:py-20">
       <h1 className="text-[1.9rem] mb-8">Your cart</h1>
 
+      {error && <p role="alert" className="text-danger text-sm mb-4">{error}</p>}
       {unavailable.length > 0 && (
         <div className="border border-danger/40 rounded-xl p-4 mb-6" role="alert">
           <p className="text-sm text-muted mb-3">These products or strengths are no longer available. Remove them and choose an available option from the product page.</p>
           {unavailable.map(line => (
             <div key={line.cartKey} className="flex items-center justify-between gap-3 py-2 text-sm">
-              <span>{line.name}{line.strength ? ` (${line.strength})` : ""}</span>
+              <span>{line.name}{line.strength ? ` (${line.strength})` : ""} — {line.reason}</span>
               <button type="button" onClick={() => handleRemove(line.cartKey)} className="text-danger">Remove</button>
             </div>
           ))}
@@ -102,7 +119,7 @@ export default function CartPage() {
       {lines.length === 0 ? (
         <p className="text-muted">
           Your cart is empty.{" "}
-          <Link href="/#shop" className="text-accent hover:underline">
+          <Link href="/compounds" className="text-accent hover:underline">
             Browse products →
           </Link>
         </p>
@@ -112,7 +129,7 @@ export default function CartPage() {
             {lines.map((line) => (
               <div
                 key={line.cartKey}
-                className="flex items-center gap-4 bg-panel border border-line rounded-2xl p-4"
+                className="flex flex-wrap items-center gap-4 bg-panel border border-line rounded-2xl p-4"
               >
                 {line.imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -134,14 +151,7 @@ export default function CartPage() {
                     {formatCents(line.priceCents)} each
                   </p>
                 </div>
-                <input
-                  type="number"
-                  min={1}
-                  max={99}
-                  value={line.quantity}
-                  onChange={(e) => handleQuantity(line.cartKey, Number(e.target.value))}
-                  className="w-16 bg-bg-2 border border-line-strong rounded-lg px-2 py-1.5 text-center"
-                />
+                <CartQuantity key={`${line.cartKey}:${line.quantity}`} quantity={line.quantity} name={`${line.name}${line.strength ? ` (${line.strength})` : ""}`} disabled={placing} onChange={quantity => handleQuantity(line.cartKey, quantity)} />
                 <span className="w-24 text-right font-semibold">{formatCents(line.lineTotalCents)}</span>
                 <button
                   type="button"
@@ -159,15 +169,15 @@ export default function CartPage() {
             <span className="text-[1.3rem] font-semibold text-accent">{formatCents(totalCents)}</span>
           </div>
 
-          {error && <p className="text-danger text-[0.85rem] mb-4">{error}</p>}
+
 
           <button
             type="button"
-            disabled={placing || unavailable.length > 0}
+            disabled={placing || refreshing || !!error || unavailable.length > 0}
             onClick={handlePlaceOrder}
             className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-semibold text-[0.95rem] bg-gradient-to-br from-accent to-accent-2 text-accent-ink disabled:opacity-60"
           >
-            {placing ? "Placing order…" : "Place order"}
+            {placing ? "Placing order…" : refreshing ? "Updating cart…" : "Place order"}
           </button>
           <p className="text-muted text-[0.78rem] mt-3 text-center">
             Payment is not collected yet — orders are recorded as pending and you&apos;ll be

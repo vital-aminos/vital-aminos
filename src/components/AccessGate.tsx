@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 const STORAGE_KEY = "va_access_grant";
 const FIVE_DAYS_MS = 5 * 24 * 60 * 60 * 1000;
@@ -38,6 +39,8 @@ function readGrant(): { role: string; expires: number } | null {
 }
 
 export default function AccessGate({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const publicPage = ["/privacy", "/terms", "/research-use", "/orders"].includes(pathname);
   const [open, setOpen] = useState<boolean | null>(null); // null = not yet determined (avoids flash)
   const [role, setRole] = useState("");
   const [affirm, setAffirm] = useState(false);
@@ -52,8 +55,9 @@ export default function AccessGate({ children }: { children: React.ReactNode }) 
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-  }, [open]);
+    document.body.style.overflow = open && !publicPage ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [open, publicPage]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -73,6 +77,7 @@ export default function AccessGate({ children }: { children: React.ReactNode }) 
     setOpen(false);
   }
 
+  if (publicPage) return <>{children}</>;
   if (open === null) return null; // avoid flashing gate/site before we know
   if (!open) return <>{children}</>;
 

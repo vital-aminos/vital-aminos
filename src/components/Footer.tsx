@@ -11,8 +11,8 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-10 mb-11">
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="uppercase tracking-[0.08em] text-[1.15rem]">
-              <span className="font-extrabold">Vital</span>{" "}
-              <span className="font-normal text-accent">Aminos</span>
+              <span className="font-extrabold text-white">Vital</span>{" "}
+              <span className="font-normal text-white">Aminos</span>
             </Link>
             <p className="text-muted text-[0.85rem] mt-3 max-w-[32ch]">
               High-purity research peptides with batch-specific COAs. For research use only.
@@ -32,8 +32,8 @@ export default function Footer() {
           </div>
           <div>
             <h4 className={headingClass}>Policies</h4>
-            <a href="#" className={linkClass}>Research use policy</a>
-            <a href="#" className={linkClass}>Terms of sale</a>
+            <Link href="/research-use" className={linkClass}>Research use policy</Link>
+            <Link href="/terms" className={linkClass}>Terms of sale</Link>
             <Link href="/privacy" className={linkClass}>Privacy</Link>
           </div>
         </div>

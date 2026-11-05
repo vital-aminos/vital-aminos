@@ -28,7 +28,7 @@ export async function getCartDetails(lines: CartLine[]) {
   const detailed = lines
     .map((line) => {
       const item = byId.get(line.itemId);
-      if (!item || !item.active) return null;
+      if (!item || !item.active || item.outOfStock) return null;
       // Never silently substitute a different strength for one already in the cart.
       const option = resolveStrength(item.strengths, item.priceCents, line.strength);
       if (!option) return null;
@@ -56,6 +56,7 @@ export async function getCartDetails(lines: CartLine[]) {
     cartKey: cartKey(l.itemId, l.strength),
     name: byId.get(l.itemId)?.name ?? "Unavailable product",
     strength: l.strength,
+    reason: byId.get(l.itemId)?.outOfStock ? "Out of stock" : "No longer available",
   }));
   return { lines: detailed, totalCents, unavailable };
 }
