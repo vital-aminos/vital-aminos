@@ -130,6 +130,7 @@ model SiteSettings {
   id              String   @id @default("main")
   discountEnabled Boolean  @default(false)
   discountPercent Int      @default(10)
+  bannerText      String   @default("Free shipping on orders $150+")
   updatedAt       DateTime @updatedAt
 }
 

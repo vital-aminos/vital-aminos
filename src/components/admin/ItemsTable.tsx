@@ -42,7 +42,42 @@ export default function ItemsTable({ items }: { items: AdminItemRow[] }) {
       {filtered.length === 0 ? (
         <p className="text-muted">No items match “{query}”.</p>
       ) : (
-        <div className="overflow-x-auto border border-line rounded-2xl">
+        <>
+        {/* Phones: one card per item so Edit / Hide / Delete are always on screen */}
+        <ul className="md:hidden flex flex-col gap-3">
+          {filtered.map((item) => (
+            <li key={item.id} className="border border-line rounded-2xl p-4 bg-panel">
+              <div className="flex items-center gap-3 mb-3">
+                {item.imageUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={item.imageUrl} alt="" className="w-12 h-12 rounded-lg object-contain bg-[#07101e] border border-line shrink-0" />
+                ) : (
+                  <div className="w-12 h-12 rounded-lg border border-line bg-gradient-to-br from-[#0f1c33] to-[#07101e] shrink-0" />
+                )}
+                <div className="min-w-0">
+                  <Link href={`/admin/items/${item.id}/edit`} className="font-medium break-words hover:text-accent">
+                    {item.name}
+                  </Link>
+                  <div className="text-muted text-[0.78rem]">
+                    {formatCents(item.priceCents)} · {item.active ? "Visible" : "Hidden"}
+                    {item.outOfStock && <span className="text-danger"> · Out of stock</span>}
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-wrap items-start gap-2">
+                <Link
+                  href={`/admin/items/${item.id}/edit`}
+                  className="min-h-[40px] inline-flex items-center px-3 rounded-lg border border-line-strong text-accent text-[0.85rem]"
+                >
+                  Edit
+                </Link>
+                <ItemRowActions id={item.id} active={item.active} />
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <div className="hidden md:block overflow-x-auto border border-line rounded-2xl">
           <table className="w-full text-left text-[0.88rem]">
             <thead>
               <tr className="border-b border-line text-muted text-[0.78rem] uppercase tracking-[0.08em]">
@@ -111,6 +146,7 @@ export default function ItemsTable({ items }: { items: AdminItemRow[] }) {
             </tbody>
           </table>
         </div>
+        </>
       )}
     </div>
   );

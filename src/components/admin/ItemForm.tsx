@@ -73,22 +73,22 @@ export default function ItemForm({
       </Field>
 
       <fieldset className="border border-line rounded-xl p-4 flex flex-col gap-3">
-        <legend className="text-sm text-muted px-2">Dosages / strengths</legend>
+        <legend className="text-sm text-muted px-2">Compound Content</legend>
         <p className="text-muted text-xs">Optional. Add a label and USD price for each option. Without options, the product uses its standard price.</p>
         <input type="hidden" name="strengths" value={JSON.stringify(strengths.map(o => ({ label: o.label, priceCents: o.price.trim() === "" ? null : Math.round(Number(o.price) * 100) })))} />
         {strengths.map((option, index) => (
           <div key={index} className="flex gap-2 items-end flex-wrap">
-            <label className="flex-1 min-w-32 text-xs text-muted">Strength
-              <input aria-label={`Strength ${index + 1}`} required maxLength={80} placeholder="e.g. 5 mg" value={option.label} onChange={e => setStrengths(strengths.map((o, i) => i === index ? { ...o, label: e.target.value } : o))} className="block w-full bg-bg-2 border border-line-strong rounded-lg px-3 py-2 mt-1" />
+            <label className="flex-1 min-w-32 text-xs text-muted">Content
+              <input aria-label={`Compound content ${index + 1}`} required maxLength={80} placeholder="e.g. 5 mg" value={option.label} onChange={e => setStrengths(strengths.map((o, i) => i === index ? { ...o, label: e.target.value } : o))} className="block w-full bg-bg-2 border border-line-strong rounded-lg px-3 py-2 mt-1" />
             </label>
             <label className="flex-1 min-w-28 text-xs text-muted">Price (USD)
-              <input aria-label={`Strength ${index + 1} price`} required type="number" min="0" step="0.01" value={option.price} onChange={e => setStrengths(strengths.map((o, i) => i === index ? { ...o, price: e.target.value } : o))} className="block w-full bg-bg-2 border border-line-strong rounded-lg px-3 py-2 mt-1" />
+              <input aria-label={`Compound content ${index + 1} price`} required type="number" min="0" step="0.01" value={option.price} onChange={e => setStrengths(strengths.map((o, i) => i === index ? { ...o, price: e.target.value } : o))} className="block w-full bg-bg-2 border border-line-strong rounded-lg px-3 py-2 mt-1" />
             </label>
-            <button type="button" aria-label={`Remove strength ${index + 1}`} onClick={() => setStrengths(strengths.filter((_, i) => i !== index))} className="px-3 py-2 text-danger text-sm">Remove</button>
+            <button type="button" aria-label={`Remove compound content ${index + 1}`} onClick={() => setStrengths(strengths.filter((_, i) => i !== index))} className="px-3 py-2 text-danger text-sm">Remove</button>
           </div>
         ))}
         {fieldError("strengths") && <p role="alert" className="text-danger text-xs">{fieldError("strengths")}</p>}
-        <button type="button" disabled={strengths.length >= 30} onClick={() => setStrengths([...strengths, { label: "", price: initial?.price ?? "" }])} className="self-start text-accent text-sm disabled:opacity-50">+ Add strength</button>
+        <button type="button" disabled={strengths.length >= 30} onClick={() => setStrengths([...strengths, { label: "", price: initial?.price ?? "" }])} className="self-start text-accent text-sm disabled:opacity-50">+ Add compound content</button>
       </fieldset>
 
       <Field label="Short note" error={fieldError("note")} hint="Optional — shown under the price, e.g. “Single vial • 10 mg”">

@@ -191,11 +191,27 @@ export async function updateItem(
   redirect_to_admin();
 }
 
-export async function deleteItem(id: string) {
+export type DeleteItemResult = { ok: true } | { ok: false; error: string };
+
+export async function deleteItem(id: string): Promise<DeleteItemResult> {
   await requireAdmin();
-  await prisma.item.delete({ where: { id } });
+  // Order history references items, so a product that has been ordered can't be
+  // removed without breaking those orders. Tell the admin to hide it instead.
+  const orderCount = await prisma.orderItem.count({ where: { itemId: id } });
+  if (orderCount > 0) {
+    return {
+      ok: false,
+      error: "This product has been ordered before, so it can't be deleted. Use Hide to remove it from the shop.",
+    };
+  }
+  try {
+    await prisma.item.delete({ where: { id } });
+  } catch {
+    return { ok: false, error: "Couldn't delete this product. It may already be gone — refresh and try again." };
+  }
   revalidatePath("/", "layout");
   revalidatePath("/admin");
+  return { ok: true };
 }
 
 export async function toggleItemActive(id: string, active: boolean) {

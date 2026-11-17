@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { auth, signOut } from "@/auth";
 import CartBadge from "@/components/CartBadge";
-import { getDiscount } from "@/lib/settings";
+import { getBannerText, getDiscount } from "@/lib/settings";
 import MobileMenu from "@/components/MobileMenu";
 import SearchBar from "@/components/SearchBar";
 
 export default async function Header() {
-  const [session, discount] = await Promise.all([auth(), getDiscount()]);
+  const [session, discount, bannerText] = await Promise.all([auth(), getDiscount(), getBannerText()]);
 
   // Members-only site: signed-out visitors only ever see the sign-in page, so
   // show a bare brand bar with no navigation, search, cart or promo details.
@@ -33,18 +33,18 @@ export default async function Header() {
 
   return (
     <>
-      <div className="bg-gradient-to-r from-accent-soft to-[rgba(29,111,232,0.14)] border-b border-line text-text text-[0.78rem] tracking-[0.01em] flex gap-3 justify-center items-center py-2.5 px-4">
-        <span>Free shipping on orders $150+</span>
-        {discount.enabled && (
-          <>
-            <span className="opacity-40">•</span>
+      {(bannerText || discount.enabled) && (
+        <div className="bg-gradient-to-r from-accent-soft to-[rgba(29,111,232,0.14)] border-b border-line text-text text-[0.78rem] tracking-[0.01em] flex flex-wrap gap-x-3 gap-y-1 justify-center items-center py-2.5 px-4 text-center">
+          {bannerText && <span>{bannerText}</span>}
+          {bannerText && discount.enabled && <span className="opacity-40">•</span>}
+          {discount.enabled && (
             <span>
               <strong className="text-accent">{discount.percent}% off</strong> sitewide — prices
               already reduced
             </span>
-          </>
-        )}
-      </div>
+          )}
+        </div>
+      )}
 
       <header className="flex items-center justify-between gap-6 py-[18px] px-[clamp(16px,5vw,56px)] border-b border-line sticky top-0 bg-[rgba(4,8,15,0.78)] backdrop-blur-xl z-40">
         <Link href="/" className="flex items-center gap-3 uppercase tracking-[0.08em] text-[1.15rem]">

@@ -69,7 +69,7 @@ export async function placeOrder(lines: CartLine[]): Promise<PlaceOrderResult> {
 
   if (!cartSchema.safeParse(lines).success) return { error: "Your cart contains invalid quantities or options. Please update it and try again." };
   const { lines: detailed, totalCents } = await getCartDetails(lines);
-  if (detailed.length !== lines.length) return { error: "Some products or strengths are no longer available. Please review your cart." };
+  if (detailed.length !== lines.length) return { error: "Some products or compound content options are no longer available. Please review your cart." };
   if (detailed.length === 0) {
     return { error: "Your cart is empty or those items are no longer available." };
   }

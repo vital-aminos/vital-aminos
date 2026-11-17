@@ -8,10 +8,12 @@ export default function AddToCartButton({
   itemId,
   isSignedIn,
   className,
+  quantity = 1,
 }: {
   itemId: string;
   isSignedIn: boolean;
   className?: string;
+  quantity?: number;
 }) {
   const router = useRouter();
   const [added, setAdded] = useState(false);
@@ -21,7 +23,7 @@ export default function AddToCartButton({
       router.push("/sign-in");
       return;
     }
-    addToCart(itemId, 1);
+    addToCart(itemId, quantity);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1400);
   }

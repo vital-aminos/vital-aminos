@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 export const strengthsSchema = z.array(z.object({
-  label: z.string().trim().min(1, "Enter a strength label").max(80),
+  label: z.string().trim().min(1, "Enter a compound content label").max(80),
   priceCents: z.number().int().min(0).max(2147483647),
 })).max(30).refine(
   (options) => new Set(options.map((o) => o.label.toLowerCase())).size === options.length,
-  "Strength labels must be unique",
+  "Compound content labels must be unique",
 );
 
 export type StrengthOption = z.infer<typeof strengthsSchema>[number];

@@ -10,14 +10,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <div className="max-w-[1000px] mx-auto px-[clamp(16px,5vw,56px)] py-12">
-      <div className="flex items-center gap-6 mb-10 border-b border-line pb-5">
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mb-10 border-b border-line pb-5">
         <Link href="/admin" className="font-serif text-[1.3rem]">
           Admin
         </Link>
-        <nav className="flex gap-5 text-[0.88rem] text-muted">
+        <nav className="flex flex-wrap gap-x-5 gap-y-2 text-[0.88rem] text-muted">
           <Link href="/admin" className="hover:text-text transition-colors">Items</Link>
           <Link href="/admin/items/new" className="hover:text-text transition-colors">Add item</Link>
           <Link href="/admin/discount" className="hover:text-text transition-colors">Discount</Link>
+          <Link href="/admin/banner" className="hover:text-text transition-colors">Banner</Link>
           <Link href="/admin/messages" className="hover:text-text transition-colors">Messages</Link>
         </nav>
         <Link href="/" className="ml-auto text-[0.85rem] text-muted hover:text-accent transition-colors">

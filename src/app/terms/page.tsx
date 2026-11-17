@@ -14,12 +14,12 @@ export default function TermsPage() {
           <p className="text-muted">Vital Aminos supplies research compounds to qualified researchers aged 21 or older. Products are for laboratory and analytical research only, and are not for human or veterinary use. Read our <Link href="/research-use" className="text-accent hover:underline">research use policy</Link> before ordering.</p>
         </section>
         <section className="space-y-3">
-          <h2 className="text-xl">Products, strengths and prices</h2>
-          <p className="text-muted">Prices are shown in USD. Select the required strength and quantity before placing an order. Available discounts are reflected in the displayed price. The cart checks current prices and availability when an order is placed; out-of-stock items cannot be ordered.</p>
+          <h2 className="text-xl">Products, compound content and prices</h2>
+          <p className="text-muted">Prices are shown in USD. Select the required compound content and quantity before placing an order. Available discounts are reflected in the displayed price. The cart checks current prices and availability when an order is placed; out-of-stock items cannot be ordered.</p>
         </section>
         <section className="space-y-3">
           <h2 className="text-xl">Current ordering and payment process</h2>
-          <p className="text-muted">This website currently records orders as awaiting payment. Placing an order does not charge your payment method. Review your order history for the recorded products, strengths, quantities and total. Contact us to confirm payment and fulfillment arrangements before sending payment.</p>
+          <p className="text-muted">This website currently records orders as awaiting payment. Placing an order does not charge your payment method. Review your order history for the recorded products, compound content, quantities and total. Contact us to confirm payment and fulfillment arrangements before sending payment.</p>
         </section>
         <section className="space-y-3">
           <h2 className="text-xl">Shipping, changes and product issues</h2>

@@ -67,10 +67,10 @@ the **Admin** link in the header (or go straight to `/admin`).
 Hidden items stay in the database and are reachable by direct admin link, but don't
 show in the shop grid or to non-admins.
 
-Products can also have an optional **category** and up to 30 **dosage / strength**
+Products can also have an optional **category** and up to 30 **compound content**
 options, each with its own USD price. Set these in the add/edit item form. Products
 in the same category appear beneath product details as similar products (up to
-three active products; category matching ignores capitalization). Strength options
+three active products; category matching ignores capitalization). Compound content options
 appear in a selector on the product page and are preserved in the cart and order
 history. Products without options continue to use their standard price.
 

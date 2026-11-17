@@ -106,7 +106,7 @@ export default function CartPage() {
       {error && <p role="alert" className="text-danger text-sm mb-4">{error}</p>}
       {unavailable.length > 0 && (
         <div className="border border-danger/40 rounded-xl p-4 mb-6" role="alert">
-          <p className="text-sm text-muted mb-3">These products or strengths are no longer available. Remove them and choose an available option from the product page.</p>
+          <p className="text-sm text-muted mb-3">These products or compound content options are no longer available. Remove them and choose an available option from the product page.</p>
           {unavailable.map(line => (
             <div key={line.cartKey} className="flex items-center justify-between gap-3 py-2 text-sm">
               <span>{line.name}{line.strength ? ` (${line.strength})` : ""} — {line.reason}</span>
